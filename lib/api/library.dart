@@ -10,6 +10,7 @@ class Library {
     id = json['id'];
     name = json['name'];
   }
+  String get displayName => name ?? 'Unknown';
 }
 
 class LibraryLoader extends ApiDataLoader<Library> {

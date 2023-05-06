@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:youphotomobile/ui/home/provider.dart';
-import 'package:youphotomobile/ui/home/tabs/home/wrap.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youphotomobile/ui/home/layout.dart';
+import 'package:youphotomobile/ui/home/tabs/home/view/wrap.dart';
+import 'package:youphotomobile/ui/home/tabs/library/view/library_list_vew.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomePageContent extends StatelessWidget {
-  final HomeProvider provider;
-  const HomePageContent({Key? key,required this.provider}) : super(key: key);
+  const HomePageContent({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: IndexedStack(
-        index: provider.activeTab,
-        children: <Widget>[
-          TabHomeWrap(),
-          Container(),
-          Container()
-        ],
-      ),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return IndexedStack(
+          index: state.tabIndex,
+          children: <Widget>[
+            TabHomeWrap(),
+            LibraryListView(),
+            HomeLayout(child:Container()),
+            // HomeLayout(child:Container()),
+            // HomeLayout(child:Container())
+            // Container(),
+            // Container(),
+            // Container()
+          ],
+        );
+      },
     );
   }
 }

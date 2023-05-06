@@ -9,20 +9,23 @@ class Photo {
   String? thumbnail;
   String? createdAt;
   String? updatedAt;
-
+  String? blurHash;
+  Function(int)? onIndexChange;
   Photo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     thumbnail = json['thumbnail'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    blurHash = json['blurHash'];
   }
 
   get thumbnailUrl {
-    return "${ApplicationConfig().serviceUrl}/image/${id}/thumbnail?a=${ApplicationConfig().token}";
+    final token = ApplicationConfig().token;
+    return "${ApplicationConfig().serviceUrl}/thumbnail/${this.thumbnail}?a=${ApplicationConfig().token ?? ""}";
   }
   get rawUrl {
-    return "${ApplicationConfig().serviceUrl}/image/${id}/raw?a=${ApplicationConfig().token}";
+    return "${ApplicationConfig().serviceUrl}/image/${id}/raw?a=${ApplicationConfig().token ?? ""}";
   }
 }
 

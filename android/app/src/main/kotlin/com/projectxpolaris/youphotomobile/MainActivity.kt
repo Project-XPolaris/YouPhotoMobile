@@ -15,5 +15,4 @@ class MainActivity: FlutterActivity() {
                 ?.setInt(this, Color.TRANSPARENT)
         }
     }
-
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:youphotomobile/api/client.dart';
-import 'package:youphotomobile/ui/home/tabs/home/provider.dart';
 import 'package:youui/components/filter.dart';
 
 import '../../api/library.dart';
+import '../home/tabs/home/bloc/home_bloc.dart';
 
 class PhotoFilterView extends StatefulWidget {
   final ImageQueryFilter filter;
@@ -53,12 +53,11 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
           selectedColor: Theme.of(context).colorScheme.primaryContainer,
           value: getOrder(),
           onSelectChange: (option) async {
-            final newFilter = widget.filter;
+            ImageQueryFilter newFilter = widget.filter;
             if (option.key == "random") {
-              newFilter.random = true;
+              newFilter = newFilter.copyWith(random: true);
             } else {
-              newFilter.random = false;
-              newFilter.order = option.key;
+              newFilter = newFilter.copyWith(order: option.key,random: false);
             }
             setState(() {
               filter = newFilter;
@@ -81,18 +80,19 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
               );
             }).toList()],
             checked: getSelectLibrary(),
-            onValueChange: (newChecked){
-              final newFilter = widget.filter;
-              if (newChecked.contains("all")) {
-               newFilter.libraryIds = [];
+            onValueChange: (option,selected,newChecked){
+              ImageQueryFilter newFilter = widget.filter;
+              if (option.key == "all") {
+                newFilter = newFilter.copyWith(libraryIds: []);
               } else {
-                newFilter.libraryIds = newChecked.where((value) => value != "all").toList();
+                newFilter = newFilter.copyWith(libraryIds: newChecked.where((element) => element != "all").toList());
               }
               setState(() {
                 filter = newFilter;
               });
               widget.onFilterChange(newFilter);
-            }
+            },
+            selectedColor: Theme.of(context).colorScheme.primaryContainer
         )
       ],
     );
