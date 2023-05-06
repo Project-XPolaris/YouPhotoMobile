@@ -27,7 +27,6 @@ class HomeLayout extends StatelessWidget {
                 icon: const Icon(Icons.photo_album), label: "Album"),
             NavigationBarItem(icon: const Icon(Icons.person), label: "User")
           ],
-          verticalNavHeight: 320,
           action: Column(
             children: actions,
           ),

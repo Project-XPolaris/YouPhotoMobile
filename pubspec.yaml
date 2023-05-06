@@ -40,8 +40,7 @@ dependencies:
   filesize: ^2.0.1
   intl: ^0.17.0
   cached_network_image: ^3.2.0
-  photo_view:
-    git: https://github.com/bluefireteam/photo_view.git
+  photo_view: 0.14.0
   scroll_snap_list: ^0.8.4
   youui:
     git: https://github.com/Project-XPolaris/YouUI.git
