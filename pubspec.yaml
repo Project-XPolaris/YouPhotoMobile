@@ -49,6 +49,7 @@ dependencies:
   flutter_blurhash: ^0.7.0
   image_gallery_saver: '^1.7.1'
   permission_handler: ^10.0.0
+  flutter_windowmanager: ^0.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

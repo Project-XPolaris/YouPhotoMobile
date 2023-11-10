@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:youui/components/navigation.dart';
-import 'package:youui/layout/home/home.dart';
 
-import 'appbar.dart';
 import 'bloc/home_bloc.dart';
 import 'content.dart';
 

@@ -248,6 +248,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_windowmanager:
+    dependency: "direct main"
+    description:
+      name: flutter_windowmanager
+      sha256: b4d0bc06f6777952b729c0cdb7ce9ad1ecabd8b8b1cb0acb57a36621457dab1b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   http:
     dependency: transitive
     description:
@@ -746,7 +754,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0334e82d960d65c339f143747d3f6c12f0fd3b23"
+      resolved-ref: e4ce3f8cec42b2d15dda9e30422dccd9924c7d61
       url: "https://github.com/Project-XPolaris/YouUI.git"
     source: git
     version: "0.0.1"

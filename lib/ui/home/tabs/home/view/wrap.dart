@@ -30,6 +30,7 @@ class TabHomeWrap extends StatelessWidget {
                         return PhotoFilterView(
                           filter: state.filter,
                           onFilterChange: (filter) {
+                            print(filter);
                             context
                                 .read<TabHomeBloc>()
                                 .add(UpdateFilterEvent(filter: filter));

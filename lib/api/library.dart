@@ -15,7 +15,7 @@ class Library {
 
 class LibraryLoader extends ApiDataLoader<Library> {
   @override
-  Future<ListResponseWrap<Library>> fetchData(Map<String, String> params) {
+  Future<ListResponseWrap<Library>> fetchData(Map<String, dynamic> params) {
     return ApiClient().fetchLibraryList(params);
   }
 }

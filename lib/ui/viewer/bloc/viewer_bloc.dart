@@ -18,6 +18,7 @@ class ViewerBloc extends Bloc<ViewerEvent, ViewerState> {
   )) {
     on<IndexChangedEvent>((event, emit) async {
       emit(state.copyWith(current: event.index));
+      print(state.current);
     });
     on<LoadMoreEvent>((event, emit) async {
       if (await loader.loadMore()) {

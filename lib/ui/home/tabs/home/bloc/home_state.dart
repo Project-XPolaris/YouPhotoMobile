@@ -4,20 +4,23 @@ class ImageQueryFilter {
   final String order;
   final bool random;
   final List<String> libraryIds;
+  final List<String> tag;
 
   const ImageQueryFilter(
-      {this.order = "id desc", this.random = false, this.libraryIds = const []});
+      {this.order = "id desc", this.random = false, this.libraryIds = const [], this.tag = const []});
 
   ImageQueryFilter copyWith({
     String? order,
     bool? random,
     List<String>? libraryIds,
     String? viewMode,
+    List<String>? tag,
   }) {
     return ImageQueryFilter(
       order: order ?? this.order,
       random: random ?? this.random,
       libraryIds: libraryIds ?? this.libraryIds,
+      tag: tag ?? this.tag,
     );
   }
 }

@@ -21,6 +21,7 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
       }
     });
     on<UpdateFilterEvent>((event, emit) async {
+      print(event.filter);
       await loader.loadData(extraFilter: _getExtraParams(event.filter),force: true);
         emit(state.copyWith(photos: [...loader.list],filter: event.filter));
     });
@@ -28,11 +29,12 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
       emit(state.copyWith(viewMode: event.viewMode));
     });
   }
-  Map<String,String> _getExtraParams(ImageQueryFilter filter) {
-    Map<String,String> result = {
+  Map<String,dynamic> _getExtraParams(ImageQueryFilter filter) {
+    Map<String,dynamic> result = {
       "order":filter.order,
       "pageSize":"200",
-      "random":filter.random ? "1" : ""
+      "random":filter.random ? "1" : "",
+      "tag":filter.tag,
     };
     if (filter.libraryIds.isNotEmpty) {
       for (var id in filter.libraryIds) {

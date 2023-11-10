@@ -9,7 +9,7 @@ abstract class ApiDataLoader<T> {
   int pageSize = 30;
 
   Future<bool> loadData(
-      {Map<String, String> extraFilter = const {}, force = false}) async {
+      {Map<String, dynamic> extraFilter = const {}, force = false}) async {
     if ((!firstLoad || isLoading || !hasMore) && !force) {
       return false;
     }
@@ -21,7 +21,7 @@ abstract class ApiDataLoader<T> {
       "page": page.toString(),
       "pageSize": pageSize.toString()
     };
-    Map<String, String> params = new Map.from(queryParams);
+    Map<String,dynamic> params = new Map.from(queryParams);
     params.addAll(extraFilter);
     var response = await fetchData(params);
     list = response.result;
@@ -32,7 +32,7 @@ abstract class ApiDataLoader<T> {
     return true;
   }
 
-  Future<bool> loadMore({Map<String, String> extraFilter = const {}}) async {
+  Future<bool> loadMore({Map<String, dynamic> extraFilter = const {}}) async {
     if (!hasMore || isLoading) {
       return false;
     }
@@ -41,7 +41,7 @@ abstract class ApiDataLoader<T> {
       "page": (page + 1).toString(),
       "pageSize": pageSize.toString()
     };
-    Map<String, String> params = new Map.from(queryParams);
+    Map<String, dynamic> params = new Map.from(queryParams);
     params.addAll(extraFilter);
     var response = await fetchData(params);
     list.addAll(response.result);
@@ -51,6 +51,5 @@ abstract class ApiDataLoader<T> {
     isLoading = false;
     return true;
   }
-
-  Future<ListResponseWrap<T>> fetchData(Map<String, String> params);
+  Future<ListResponseWrap<T>> fetchData(Map<String, dynamic> params);
 }
