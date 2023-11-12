@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/home/layout.dart';
+import 'package:youphotomobile/ui/home/tabs/album/album/album_list_vew.dart';
 import 'package:youphotomobile/ui/home/tabs/home/view/wrap.dart';
 import 'package:youphotomobile/ui/home/tabs/library/view/library_list_vew.dart';
 
@@ -17,6 +18,7 @@ class HomePageContent extends StatelessWidget {
           index: state.tabIndex,
           children: <Widget>[
             TabHomeWrap(),
+            AlbumView(),
             LibraryListView(),
             HomeLayout(child:Container()),
             // HomeLayout(child:Container()),

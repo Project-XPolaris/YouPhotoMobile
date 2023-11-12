@@ -5,6 +5,7 @@ import 'package:youphotomobile/api/image.dart';
 import 'package:youphotomobile/api/library.dart';
 
 import '../config.dart';
+import 'album.dart';
 import 'base.dart';
 
 class ApiClient {
@@ -40,6 +41,34 @@ class ApiClient {
         response.data, (data) => Library.fromJson(data));
     return responseBody;
   }
+  Future<ListResponseWrap<Album>> fetchAlbumList(
+      Map<String, dynamic> params) async {
+    var response = await _dio.get("/albums", queryParameters: params);
+    ListResponseWrap<Album> responseBody = ListResponseWrap.fromJson(
+        response.data, (data) => Album.fromJson(data));
+    return responseBody;
+  }
+
+  Future<Album> createAlbum(Map<String, dynamic> params) async {
+    var response = await _dio.post("/album", data: params);
+    Album responseBody = Album.fromJson(response.data);
+    return responseBody;
+  }
+
+  Future addImageToAlbum(int albumId, List<int> imageIds) async {
+    await _dio.post("/album/$albumId/image", data: {
+      "imageIds": imageIds
+    });
+  }
+  Future removeImageFromAlbum(int albumId, List<int> imageIds) async {
+    await _dio.delete("/album/$albumId/image", data: {
+      "imageIds": imageIds
+    });
+  }
+  Future deleteAlbum(int albumId) async {
+    await _dio.delete("/album/$albumId");
+  }
+
 
   ApiClient._internal();
 }

@@ -23,10 +23,12 @@ class HomeLayout extends StatelessWidget {
           tabIndex: state.tabIndex,
           navItems: [
             NavigationBarItem(icon: const Icon(Icons.home), label: "Home"),
+            NavigationBarItem(label: "album", icon: const Icon(Icons.photo_album)),
             NavigationBarItem(
-                icon: const Icon(Icons.photo_album), label: "Album"),
+                icon: const Icon(Icons.photo_library), label: "Library"),
             NavigationBarItem(icon: const Icon(Icons.person), label: "User")
           ],
+
           action: Column(
             children: actions,
           ),

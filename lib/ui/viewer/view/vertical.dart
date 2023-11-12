@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
 import 'package:youphotomobile/ui/viewer/bloc/viewer_bloc.dart';
 import 'package:youphotomobile/util/color.dart';
 
@@ -21,9 +22,13 @@ class ImageViewerVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isFolderDevice = checkFoldableDevice(context);
+
     return BlocBuilder<ViewerBloc, ViewerState>(
       builder: (context, state) {
-        print(state);
+        void onAddImageToAlbum(int albumId,int imageId) {
+          context.read<ViewerBloc>().add(AddToAlbumEvent(albumId: albumId,imageIds: [imageId]));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to album')));
+        }
         var currentPhotoItem = state.photos[state.current];
         var controller = PageController(
           initialPage: state.current,
@@ -83,6 +88,25 @@ class ImageViewerVertical extends StatelessWidget {
                             }
                           },
                         ),
+                        PopupMenuButton<String>(icon: Icon(Icons.more_vert), onSelected: (value) {
+                          if (value == "addToAlbum") {
+                            showModalBottomSheet(context: context, builder: (context) {
+                              return AlbumSelectView(
+                                onSelect: (album) {
+                                  onAddImageToAlbum(album.id!,state.photos[state.current].id!);
+                                }
+                              );
+                            });
+                          }
+                        }, itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: "addToAlbum",
+                              child: Text('Add to album'),
+                            ),
+                          ];
+                        },
+                        )
                       ],
                       backgroundColor: Colors.transparent,
                       elevation: 0,

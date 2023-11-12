@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:youphotomobile/api/client.dart';
 import 'package:youphotomobile/api/image.dart';
 
 part 'viewer_event.dart';
@@ -28,6 +29,9 @@ class ViewerBloc extends Bloc<ViewerEvent, ViewerState> {
     });
     on<SwitchUIEvent>((event, emit) async {
       emit(state.copyWith(showUI: event.showUI));
+    });
+    on<AddToAlbumEvent>((event, emit) async {
+      await ApiClient().addImageToAlbum(event.albumId, event.imageIds);
     });
   }
 }

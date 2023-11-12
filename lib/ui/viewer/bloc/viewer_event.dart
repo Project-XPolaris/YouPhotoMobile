@@ -21,3 +21,11 @@ class SwitchUIEvent extends ViewerEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AddToAlbumEvent extends ViewerEvent {
+  final int albumId;
+  final List<int> imageIds;
+  const AddToAlbumEvent({required this.albumId, required this.imageIds});
+  @override
+  List<Object?> get props => [albumId, imageIds];
+}
