@@ -31,7 +31,7 @@ class ViewerBloc extends Bloc<ViewerEvent, ViewerState> {
       emit(state.copyWith(showUI: event.showUI));
     });
     on<AddToAlbumEvent>((event, emit) async {
-      await ApiClient().addImageToAlbum(event.albumId, event.imageIds);
+      await ApiClient().addImageToAlbum(event.albumId, event.imageIds.toList());
     });
   }
 }

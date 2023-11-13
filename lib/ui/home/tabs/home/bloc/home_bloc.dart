@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:youphotomobile/api/client.dart';
 import 'package:youphotomobile/api/image.dart';
 
 part 'home_event.dart';
@@ -27,6 +28,25 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
     });
     on<UpdateViewModeEvent>((event, emit) async {
       emit(state.copyWith(viewMode: event.viewMode));
+    });
+    on<OnSelectPhotoEvent>((event, emit) async {
+      List<int> selectedPhotoIds = [...state.selectedPhotoIds];
+      if (event.selected) {
+        selectedPhotoIds.add(event.photoId);
+      } else {
+        selectedPhotoIds.remove(event.photoId);
+      }
+      emit(state.copyWith(selectedPhotoIds: selectedPhotoIds));
+    });
+    on<OnChangeSelectModeEvent>((event, emit) async {
+      emit(state.copyWith(selectMode: event.selectMode));
+    });
+    on<OnUpdateSelectedPhotosEvent>((event, emit) async {
+      emit(state.copyWith(selectedPhotoIds: event.selectedPhotoIds));
+    });
+    on<OnAddSelectedPhotosEvent>((event, emit) async {
+      await ApiClient().addImageToAlbum(event.albumId, event.selectedPhotoIds);
+      emit(state.copyWith(selectedPhotoIds: []));
     });
   }
   Map<String,dynamic> _getExtraParams(ImageQueryFilter filter) {

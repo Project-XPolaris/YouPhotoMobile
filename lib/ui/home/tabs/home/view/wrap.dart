@@ -22,7 +22,7 @@ class TabHomeWrap extends StatelessWidget {
               body: const ScreenWidthSelector(
                 verticalChild: TabHomeVerticalPage(),
               ),
-              floatingActionButton: FloatingActionButton(
+              floatingActionButton: !state.selectMode?FloatingActionButton(
                 onPressed: () {
                   showModalBottomSheet(
                       context: context,
@@ -39,7 +39,7 @@ class TabHomeWrap extends StatelessWidget {
                       });
                 },
                 child: Icon(Icons.filter_list),
-              ),
+              ):null,
             ),
             actions: [
               PopupMenuButton<String>(icon: Icon(Icons.view_column), onSelected: (value) {

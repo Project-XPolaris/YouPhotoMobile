@@ -29,3 +29,32 @@ class UpdateViewModeEvent extends HomeEvent {
   @override
   List<Object?> get props => [viewMode];
 }
+
+class OnSelectPhotoEvent extends HomeEvent {
+  final int photoId;
+  final bool selected;
+  OnSelectPhotoEvent({required this.photoId,required this.selected});
+  @override
+  List<Object?> get props => [photoId,selected];
+}
+
+class OnChangeSelectModeEvent extends HomeEvent {
+  final bool selectMode;
+  OnChangeSelectModeEvent({required this.selectMode});
+  @override
+  List<Object?> get props => [selectMode];
+}
+
+class OnUpdateSelectedPhotosEvent extends HomeEvent {
+  final List<int> selectedPhotoIds;
+  OnUpdateSelectedPhotosEvent({required this.selectedPhotoIds});
+  @override
+  List<Object?> get props => [selectedPhotoIds];
+}
+class OnAddSelectedPhotosEvent extends HomeEvent {
+  final List<int> selectedPhotoIds;
+ final albumId;
+  OnAddSelectedPhotosEvent({required this.selectedPhotoIds,required this.albumId});
+  @override
+  List<Object?> get props => [selectedPhotoIds,albumId];
+}
