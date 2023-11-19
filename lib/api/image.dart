@@ -15,9 +15,6 @@ class PhotoTag {
   int? imageId;
   PhotoTag.fromJson(Map<String, dynamic> json) {
     tag = json['tag'];
-    source = json['source'];
-    rank = double.parse(json['rank'].toString());
-    imageId = json['imageId'];
   }
 }
 
@@ -86,5 +83,13 @@ class PhotoLoader extends ApiDataLoader<Photo> {
   @override
   Future<ListResponseWrap<Photo>> fetchData(Map<String, dynamic> params) {
     return ApiClient().fetchImageList(params);
+  }
+
+}
+
+class PhotoTagLoader extends ApiDataLoader<PhotoTag> {
+  @override
+  Future<ListResponseWrap<PhotoTag>> fetchData(Map<String, dynamic> params) {
+    return ApiClient().fetchTagList(params);
   }
 }

@@ -17,6 +17,7 @@ class TabHomeVerticalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TabHomeBloc, TabHomeState>(
       builder: (context, state) {
+        print(state.photos.length);
         var controller = createLoadMoreController(
             () => context.read<TabHomeBloc>().add(LoadMoreEvent()));
         return RefreshIndicator(

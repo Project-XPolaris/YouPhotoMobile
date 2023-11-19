@@ -68,6 +68,13 @@ class ApiClient {
   Future deleteAlbum(int albumId) async {
     await _dio.delete("/album/$albumId");
   }
+  Future<ListResponseWrap<PhotoTag>> fetchTagList(
+      Map<String, dynamic> params) async {
+    var response = await _dio.get("/tags", queryParameters: params);
+    ListResponseWrap<PhotoTag> responseBody = ListResponseWrap.fromJson(
+        response.data, (data) => PhotoTag.fromJson(data));
+    return responseBody;
+  }
 
 
   ApiClient._internal();

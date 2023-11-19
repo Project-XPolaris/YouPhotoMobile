@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youphotomobile/api/client.dart';
+import 'package:youphotomobile/ui/components/TagSelectView.dart';
 import 'package:youui/components/filter.dart';
 
 import '../../api/library.dart';
@@ -23,6 +24,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
   List<Library> libraries = [];
   List<String> filterTags = [];
   bool isEditTagMode = false;
+
   _PhotoFilterViewState({required this.filter});
 
   loadLibraryList() async {
@@ -198,9 +200,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                   widget.onFilterChange(newFilter);
                 },
                 selectedColor: Theme.of(context).colorScheme.primaryContainer,
-                extraChildren: [
-
-                ],
+                extraChildren: [],
               ),
         Row(
           children: [
@@ -219,15 +219,13 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                       builder: (context) {
                         return AlertDialog(
                           title: Text("Add Tag"),
-                          content: TextField(
-                            autofocus: true,
-                            decoration: const InputDecoration(
-                              hintText: "Tag",
+                          content: Container(
+                            width: 320,
+                            child: TagSelectView(
+                              onTagSelect: (tag) {
+                                onAddTag(tag.tag!);
+                              },
                             ),
-                            onSubmitted: (value) {
-                              onAddTag(value);
-                              Navigator.pop(context);
-                            },
                           ),
                         );
                       });

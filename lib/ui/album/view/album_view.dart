@@ -36,7 +36,7 @@ class AlbumDetailView extends StatelessWidget {
                       .add(UpdateFilterEvent(filter: state.filter));
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(top: 16,left: 16,right: 16),
+                  margin: const EdgeInsets.only(left: 16,right: 16),
                   child: LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints constraints) {
                         int crossAxisCount = (constraints.maxWidth / 130).round();
@@ -53,45 +53,49 @@ class AlbumDetailView extends StatelessWidget {
                         }
                   //      height: constraints.maxHeight,
                   //      width: constraints.maxWidth
-                        return GridView.builder(
-                          controller: controller,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: state.photos.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            childAspectRatio: 1.0,
-                            crossAxisSpacing: 4.0,
-                            mainAxisSpacing: 4.0,
+                        return Container(
+                          width: constraints.maxWidth,
+                          height: constraints.maxHeight,
+                          child: GridView.builder(
+                            controller: controller,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: state.photos.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: 1.0,
+                              crossAxisSpacing: 4.0,
+                              mainAxisSpacing: 4.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              var content = CachedNetworkImage(
+                                imageUrl: state.photos[index].thumbnailUrl,
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              );
+                              return GestureDetector(
+                                onTap: () async {
+                                  await ImageViewer.Launch(
+                                      context, context.read<AlbumBloc>().loader, index,
+                                          (changedIndex) {
+                                        double mainAxisSize = constraints.maxWidth;
+                                        double crossAxisSize = constraints.maxHeight;
+                                        int itemHeight = (mainAxisSize / crossAxisCount).floor();
+                                        int itemInRowIndex =
+                                        ((changedIndex.toDouble() + 1) / crossAxisCount)
+                                            .ceil();
+                                        // calc offset in center of grid
+                                        double offset =
+                                            (itemHeight * itemInRowIndex) - (crossAxisSize / 2);
+                                        controller.jumpTo(offset);
+                                      });
+                                },
+                                child: Container(
+                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  child: content,
+                                ),
+                              );
+                            },
                           ),
-                          itemBuilder: (context, index) {
-                            var content = CachedNetworkImage(
-                              imageUrl: state.photos[index].thumbnailUrl,
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              fit: BoxFit.cover,
-                            );
-                            return GestureDetector(
-                              onTap: () async {
-                                await ImageViewer.Launch(
-                                    context, context.read<AlbumBloc>().loader, index,
-                                        (changedIndex) {
-                                      double mainAxisSize = constraints.maxWidth;
-                                      double crossAxisSize = constraints.maxHeight;
-                                      int itemHeight = (mainAxisSize / crossAxisCount).floor();
-                                      int itemInRowIndex =
-                                      ((changedIndex.toDouble() + 1) / crossAxisCount)
-                                          .ceil();
-                                      // calc offset in center of grid
-                                      double offset =
-                                          (itemHeight * itemInRowIndex) - (crossAxisSize / 2);
-                                      controller.jumpTo(offset);
-                                    });
-                              },
-                              child: Container(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                child: content,
-                              ),
-                            );
-                          },
                         );
                       }),
                 ),
