@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
 import 'package:youphotomobile/util/listview.dart';
-import 'package:youphotomobile/util/screen.dart';
 
 import '../../../../viewer/view/wrap.dart';
 import '../bloc/home_bloc.dart';

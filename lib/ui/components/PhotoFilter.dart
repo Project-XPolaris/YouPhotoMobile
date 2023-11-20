@@ -223,6 +223,10 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                             width: 320,
                             child: TagSelectView(
                               onTagSelect: (tag) {
+                                String nameToAdd = tag.tag!;
+                                if (filterTags.contains(nameToAdd)) {
+                                  return;
+                                }
                                 onAddTag(tag.tag!);
                               },
                             ),

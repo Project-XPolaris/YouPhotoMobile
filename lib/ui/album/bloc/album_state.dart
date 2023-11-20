@@ -5,7 +5,6 @@ class ImageQueryFilter {
   final bool random;
   final List<String> libraryIds;
   final List<String> tag;
-
   const ImageQueryFilter(
       {this.order = "id desc", this.random = false, this.libraryIds = const [], this.tag = const []});
 
@@ -25,26 +24,41 @@ class ImageQueryFilter {
   }
 }
 
+class DownloadAllImageProgress {
+  final int total;
+  final int current;
+  final String? name;
+  DownloadAllImageProgress({required this.total, required this.current, this.name});
+}
 class AlbumState extends Equatable {
   final ImageQueryFilter filter;
   final List<Photo> photos;
   final String viewMode;
+  final List<int> selectedPhotoIds;
+  final bool selectMode;
+  final DownloadAllImageProgress? downloadProgress;
+  final bool isDownloadingAll;
 
   const AlbumState(
-      {required this.filter, required this.photos, required this.viewMode});
+      {required this.filter, required this.photos, required this.viewMode, this.selectedPhotoIds = const [],this.selectMode = false,this.downloadProgress,this.isDownloadingAll = false});
 
-  AlbumState copyWith({ImageQueryFilter? filter, List<Photo>? photos, String? viewMode}) {
+  AlbumState copyWith({ImageQueryFilter? filter, List<Photo>? photos, String? viewMode, List<int>? selectedPhotoIds, bool? selectMode,DownloadAllImageProgress? downloadProgress,bool? isDownloadingAll}) {
     return AlbumState(
       filter: filter ?? this.filter,
       photos: photos ?? this.photos,
       viewMode: viewMode ?? this.viewMode,
+      selectedPhotoIds: selectedPhotoIds ?? this.selectedPhotoIds,
+      selectMode: selectMode ?? this.selectMode,
+      downloadProgress: downloadProgress ?? this.downloadProgress,
     );
   }
-
+  bool isSelected(int photoId) {
+    return selectedPhotoIds.contains(photoId);
+  }
   @override
-  List<Object?> get props => [filter, photos,viewMode];
+  List<Object?> get props => [filter, photos,viewMode,selectedPhotoIds,selectMode,downloadProgress,isDownloadingAll];
 }
 
 class AlbumInitial extends AlbumState {
-  AlbumInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large");
+  AlbumInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large",isDownloadingAll: false);
 }
