@@ -29,6 +29,11 @@ class _AlbumViewState extends State<AlbumView> {
             print("CreateAlbumEvent");
             context.read<AlbumBloc>().add(CreateAlbumEvent(name: name));
           }
+          int getRowItemCount() {
+            var itemWith = 140;
+            var screenWidth = MediaQuery.of(context).size.width;
+            return screenWidth ~/ itemWith;
+          }
           return Scaffold(
             body: Container(
               margin: const EdgeInsets.only(top: 16),
@@ -42,7 +47,7 @@ class _AlbumViewState extends State<AlbumView> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: state.albumList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: getRowItemCount(),
                     childAspectRatio: 1.0,
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
@@ -75,7 +80,26 @@ class _AlbumViewState extends State<AlbumView> {
                       ),
                       onTap: (){
                         AlbumDetailView.Launch(context, state.albumList[index]);
-                      }
+                      },
+                      onLongPress: (){
+                        showBottomSheet(context: context, builder: (context){
+                          return Container(
+                            height: 100,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.delete),
+                                  title: Text("Delete"),
+                                  onTap: (){
+                                    context.read<AlbumBloc>().add(RemoveAlbumEvent(id: state.albumList[index].id!));
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                      },
                     );
                   },
                 ),

@@ -98,11 +98,26 @@ class ImageViewerVertical extends StatelessWidget {
                               );
                             });
                           }
+                          if (value == "viewModeAuto") {
+                            context.read<ViewerBloc>().add(SwitchViewModeEvent(viewMode: "auto"));
+                          }
+                          if (value == "viewModeFixed") {
+                            context.read<ViewerBloc>().add(SwitchViewModeEvent(viewMode: "fixed"));
+                          }
                         }, itemBuilder: (context) {
                           return [
-                            PopupMenuItem(
+                            const PopupMenuItem(
                               value: "addToAlbum",
                               child: Text('Add to album'),
+                            ),
+                            PopupMenuDivider(),
+                            const PopupMenuItem(
+                              value: "viewModeAuto",
+                              child: Text('Auto Layout'),
+                            ),
+                            const PopupMenuItem(
+                              value: "viewModeFixed",
+                              child: Text('Fixed Layout'),
                             ),
                           ];
                         },
@@ -149,7 +164,7 @@ class ImageViewerVertical extends StatelessWidget {
                 ],
               ),
             )),
-            isFolderDevice
+            isFolderDevice && state.viewMode == "auto"
                 ? Container(
                     color: Theme.of(context).colorScheme.background,
                     padding: EdgeInsets.only(top: 48,left: 16,right: 16),

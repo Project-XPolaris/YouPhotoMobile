@@ -51,6 +51,9 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
       }
       emit(state.copyWith(selectedPhotoIds: selectedPhotoIds));
     });
+    on<OnDownloadAllDoneEvent>((event, emit) async {
+      emit(state.copyWith(downloadProgress: null));
+    });
     on<DownloadAllAlbumEvent>((event, emit) async {
       emit(state.copyWith(isDownloadingAll: true));
       var resp = await ApiClient().fetchImageList({
@@ -78,7 +81,13 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
           continue;
         }
       }
-      emit(state.copyWith(isDownloadingAll: false));
+      emit(state.copyWith(isDownloadingAll: false,downloadProgress: DownloadAllImageProgress(total:  resp.result.length, current:  resp.result.length)));
+    });
+    on<RemoveSelectImagesEvent>((event, emit) async {
+      await ApiClient().removeImageFromAlbum(albumId, state.selectedPhotoIds);
+      emit(state.copyWith(photos: [...state.photos.where((element){
+        return !state.selectedPhotoIds.contains(element.id);
+      })],selectMode: false,selectedPhotoIds: []));
     });
   }
   Map<String,dynamic> _getExtraParams(ImageQueryFilter filter) {

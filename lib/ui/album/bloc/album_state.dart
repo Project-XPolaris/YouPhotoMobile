@@ -37,10 +37,9 @@ class AlbumState extends Equatable {
   final List<int> selectedPhotoIds;
   final bool selectMode;
   final DownloadAllImageProgress? downloadProgress;
-  final bool isDownloadingAll;
 
   const AlbumState(
-      {required this.filter, required this.photos, required this.viewMode, this.selectedPhotoIds = const [],this.selectMode = false,this.downloadProgress,this.isDownloadingAll = false});
+      {required this.filter, required this.photos, required this.viewMode, this.selectedPhotoIds = const [],this.selectMode = false,this.downloadProgress});
 
   AlbumState copyWith({ImageQueryFilter? filter, List<Photo>? photos, String? viewMode, List<int>? selectedPhotoIds, bool? selectMode,DownloadAllImageProgress? downloadProgress,bool? isDownloadingAll}) {
     return AlbumState(
@@ -56,9 +55,9 @@ class AlbumState extends Equatable {
     return selectedPhotoIds.contains(photoId);
   }
   @override
-  List<Object?> get props => [filter, photos,viewMode,selectedPhotoIds,selectMode,downloadProgress,isDownloadingAll];
+  List<Object?> get props => [filter, photos,viewMode,selectedPhotoIds,selectMode,downloadProgress];
 }
 
 class AlbumInitial extends AlbumState {
-  AlbumInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large",isDownloadingAll: false);
+  AlbumInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large");
 }

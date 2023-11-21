@@ -28,7 +28,7 @@ class CreateAlbumEvent extends AlbumEvent {
 }
 
 class RemoveAlbumEvent extends AlbumEvent {
-  final String id;
+  final int id;
   RemoveAlbumEvent({required this.id});
 
   @override

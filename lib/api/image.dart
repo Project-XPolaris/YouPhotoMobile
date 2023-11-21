@@ -16,6 +16,7 @@ class PhotoTag {
   PhotoTag.fromJson(Map<String, dynamic> json) {
     tag = json['tag'];
   }
+  PhotoTag({this.tag});
 }
 
 // {

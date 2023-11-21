@@ -76,6 +76,8 @@ class ApiClient {
     return responseBody;
   }
 
-
+  Future removeAlbum(int albumId) async {
+    await _dio.delete("/album/$albumId");
+  }
   ApiClient._internal();
 }

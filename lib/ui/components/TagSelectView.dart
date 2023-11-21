@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:youphotomobile/api/image.dart';
 
 class TagSelectView extends StatefulWidget {
-  const TagSelectView({Key? key,this.onTagSelect}) : super(key: key);
+  const TagSelectView({Key? key, this.onTagSelect}) : super(key: key);
   final Function(PhotoTag)? onTagSelect;
 
   @override
@@ -36,13 +36,14 @@ class _TagSelectViewState extends State<TagSelectView> {
               children: [
                 Expanded(
                   child: TextField(
-
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Search tag",
                     ),
                     onChanged: (text) {
-                      searchTagText = text;
+                      setState(() {
+                        searchTagText = text;
+                      });
                     },
                   ),
                 ),
@@ -50,7 +51,9 @@ class _TagSelectViewState extends State<TagSelectView> {
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(EdgeInsets.zero),
                   ),
-                  icon: Icon(Icons.search,),
+                  icon: Icon(
+                    Icons.search,
+                  ),
                   onPressed: () {
                     searchTag(searchTagText);
                   },
@@ -61,6 +64,17 @@ class _TagSelectViewState extends State<TagSelectView> {
           Expanded(
               child: ListView(
             children: [
+              searchTagText.isNotEmpty?ListTile(
+                  title: Text(searchTagText),
+                  onTap: () {
+                    Navigator.pop(context, null);
+                    if (widget.onTagSelect != null) {
+                      widget.onTagSelect!(PhotoTag(tag: searchTagText));
+                    }
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  )):Container(),
               for (var tag in tags)
                 ListTile(
                   title: Text(tag.tag!),

@@ -29,3 +29,10 @@ class AddToAlbumEvent extends ViewerEvent {
   @override
   List<Object?> get props => [albumId, imageIds];
 }
+
+class SwitchViewModeEvent extends ViewerEvent {
+  final String viewMode;
+  const SwitchViewModeEvent({required this.viewMode});
+  @override
+  List<Object?> get props => [viewMode];
+}

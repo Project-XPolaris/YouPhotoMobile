@@ -17,15 +17,26 @@ class _InitPageState extends State<InitPage> {
     });
   }
   Future<bool> check() async {
-    var ok = await ApplicationConfig().checkConfig();
-    if (!ok) {
-      return false;
-    }
-    ok = await ApplicationConfig().loadConfig();
-    return ok;
+    await ApplicationConfig().loadAppConfig();
+    // var ok = await ApplicationConfig().checkConfig();
+    // if (!ok) {
+    //   return false;
+    // }
+    // ok = await ApplicationConfig().loadConfig();
+    // return ok;
+    return true;
   }
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: check(),
+        builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return StartPage();
+      } else {
+        return Container();
+      }
+    });
     return StartPage();
   }
 }

@@ -27,5 +27,10 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
       await _AlbumLoader.loadData(force: true);
       emit(AlbumState(albumList: [..._AlbumLoader.list]));
     });
+    on<RemoveAlbumEvent>((event, emit) async {
+      await ApiClient().removeAlbum(event.id);
+      await _AlbumLoader.loadData(force: true);
+      emit(AlbumState(albumList: [..._AlbumLoader.list]));
+    });
   }
 }

@@ -51,8 +51,18 @@ class OnSelectPhotoEvent extends AlbumEvent {
   List<Object?> get props => [photoId,selected];
 }
 
+class OnDownloadAllDoneEvent extends AlbumEvent {
+  OnDownloadAllDoneEvent();
+  @override
+  List<Object?> get props => [];
+}
 class DownloadAllAlbumEvent extends AlbumEvent {
   DownloadAllAlbumEvent();
+  @override
+  List<Object?> get props => [];
+}
+class RemoveSelectImagesEvent extends AlbumEvent {
+  RemoveSelectImagesEvent();
   @override
   List<Object?> get props => [];
 }
