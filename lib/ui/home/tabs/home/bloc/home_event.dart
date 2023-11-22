@@ -23,11 +23,11 @@ class UpdateFilterEvent extends HomeEvent {
   List<Object?> get props => [filter];
 }
 
-class UpdateViewModeEvent extends HomeEvent {
-  final String viewMode;
-  UpdateViewModeEvent({required this.viewMode});
+class UpdateGridSizeEvent extends HomeEvent {
+  final int gridSize;
+  UpdateGridSizeEvent({required this.gridSize});
   @override
-  List<Object?> get props => [viewMode];
+  List<Object?> get props => [gridSize];
 }
 
 class OnSelectPhotoEvent extends HomeEvent {

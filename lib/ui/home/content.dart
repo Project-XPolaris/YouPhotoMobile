@@ -4,6 +4,7 @@ import 'package:youphotomobile/ui/home/layout.dart';
 import 'package:youphotomobile/ui/home/tabs/album/album/album_list_vew.dart';
 import 'package:youphotomobile/ui/home/tabs/home/view/wrap.dart';
 import 'package:youphotomobile/ui/home/tabs/library/view/library_list_vew.dart';
+import 'package:youphotomobile/ui/home/tabs/local/index.dart';
 
 import 'bloc/home_bloc.dart';
 
@@ -19,7 +20,7 @@ class HomePageContent extends StatelessWidget {
           children: <Widget>[
             TabHomeWrap(),
             AlbumView(),
-            LibraryListView(),
+            HomeLayout(child:TabLocalImage()),
             HomeLayout(child:Container()),
             // HomeLayout(child:Container()),
             // HomeLayout(child:Container())

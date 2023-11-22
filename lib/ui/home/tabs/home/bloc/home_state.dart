@@ -13,7 +13,7 @@ class ImageQueryFilter {
     String? order,
     bool? random,
     List<String>? libraryIds,
-    String? viewMode,
+    String? gridSize,
     List<String>? tag,
   }) {
     return ImageQueryFilter(
@@ -28,23 +28,23 @@ class ImageQueryFilter {
 class TabHomeState extends Equatable {
   final ImageQueryFilter filter;
   final List<Photo> photos;
-  final String viewMode;
+  final int gridSize;
   final List<int> selectedPhotoIds;
   final bool selectMode;
   const TabHomeState(
-      {required this.filter, required this.photos, required this.viewMode, this.selectedPhotoIds = const [],this.selectMode = false});
+      {required this.filter, required this.photos, required this.gridSize, this.selectedPhotoIds = const [],this.selectMode = false});
 
   TabHomeState copyWith({
     ImageQueryFilter? filter,
     List<Photo>? photos,
-    String? viewMode,
+    int? gridSize,
     List<int>? selectedPhotoIds,
     bool? selectMode,
   }) {
     return TabHomeState(
       filter: filter ?? this.filter,
       photos: photos ?? this.photos,
-      viewMode: viewMode ?? this.viewMode,
+      gridSize: gridSize ?? this.gridSize,
       selectedPhotoIds: selectedPhotoIds ?? this.selectedPhotoIds,
       selectMode: selectMode ?? this.selectMode,
     );
@@ -54,9 +54,9 @@ class TabHomeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [filter, photos,viewMode,selectedPhotoIds,selectMode];
+  List<Object?> get props => [filter, photos,gridSize,selectedPhotoIds,selectMode];
 }
 
 class HomeInitial extends TabHomeState {
-  HomeInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large");
+  HomeInitial() : super(filter: const ImageQueryFilter(), photos: [],gridSize: ApplicationConfig().config.imageGridSizeValue);
 }

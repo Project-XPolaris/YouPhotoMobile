@@ -50,6 +50,8 @@ dependencies:
   image_gallery_saver: '^1.7.1'
   permission_handler: ^10.0.0
   flutter_windowmanager: ^0.2.0
+  visibility_detector: ^0.4.0+2
+  photo_manager: ^3.0.0-dev.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

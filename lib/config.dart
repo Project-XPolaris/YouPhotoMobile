@@ -3,12 +3,19 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 class Config {
   String? viewerMode;
+  int? imageGridSize;
+  int? albumGridSize;
   Config.fromJson(Map<String, dynamic> json) {
     viewerMode = json['viewerMode'];
+    imageGridSize = json['imageGridSize'];
+    albumGridSize = json['albumGridSize'];
+
   }
   toJson() {
     return {
       "viewerMode": viewerMode,
+      "imageGridSize": imageGridSize,
+      "albumGridSize": albumGridSize,
     };
   }
   Config();
@@ -17,6 +24,18 @@ class Config {
       return "auto";
     }
     return viewerMode!;
+  }
+  int get imageGridSizeValue{
+    if (imageGridSize == null) {
+      return 120;
+    }
+    return imageGridSize!;
+  }
+  int get albumGridSizeValue{
+    if (albumGridSize == null) {
+      return 120;
+    }
+    return albumGridSize!;
   }
 }
 class ApplicationConfig {

@@ -22,13 +22,17 @@ class ImageViewerVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isFolderDevice = checkFoldableDevice(context);
-
+    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return BlocBuilder<ViewerBloc, ViewerState>(
       builder: (context, state) {
-        void onAddImageToAlbum(int albumId,int imageId) {
-          context.read<ViewerBloc>().add(AddToAlbumEvent(albumId: albumId,imageIds: [imageId]));
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to album')));
+        void onAddImageToAlbum(int albumId, int imageId) {
+          context
+              .read<ViewerBloc>()
+              .add(AddToAlbumEvent(albumId: albumId, imageIds: [imageId]));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Added to album')));
         }
+
         var currentPhotoItem = state.photos[state.current];
         var controller = PageController(
           initialPage: state.current,
@@ -52,10 +56,89 @@ class ImageViewerVertical extends StatelessWidget {
           );
         }
 
+        Widget imageInfoPanel = Container(
+          color: Theme.of(context).colorScheme.background,
+          padding: EdgeInsets.only(top: 48, left: 16, right: 16),
+          width: getHalfScreenLength(context),
+          alignment: Alignment.topLeft,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    "Name",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+                Container(
+                  child: Text(
+                    currentPhotoItem.name ?? "",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(bottom: 16),
+                ),
+                Container(
+                  child: Text(
+                    "Tags",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+                Wrap(
+                  spacing: 4,
+                  children: currentPhotoItem.tag.map((item) {
+                    return Chip(
+                      padding: EdgeInsets.all(2),
+                      label: Text(item.tag ?? ""),
+                    );
+                  }).toList(),
+                ),
+                Container(
+                  child: Text(
+                    "Color",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: currentPhotoItem.imageColors.map((item) {
+                    return Container(
+                      width: 96,
+                      decoration: BoxDecoration(
+                          color: Color(
+                              int.parse(item.value!.replaceAll('#', '0xFF'))),
+                          borderRadius: BorderRadius.circular(4)),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Text(
+                            item.value ?? "",
+                            style: TextStyle(color: getTextColor(item.value!)),
+                          ),
+                          Text((item.percent! * 100).toStringAsFixed(2) + "%",
+                              style:
+                                  TextStyle(color: getTextColor(item.value!))),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                )
+              ],
+            ),
+          ),
+        );
+
         return Row(
           children: [
             Expanded(
                 child: Scaffold(
+                  key: _scaffoldKey,
               extendBodyBehindAppBar: true,
               appBar: state.showUI
                   ? AppBar(
@@ -64,6 +147,9 @@ class ImageViewerVertical extends StatelessWidget {
                         style: const TextStyle(fontSize: 18),
                       ),
                       actions: [
+                        IconButton(onPressed: () {
+                          _scaffoldKey.currentState!.openEndDrawer();
+                        }, icon: const Icon(Icons.info_outline)),
                         IconButton(
                           icon: const Icon(Icons.download),
                           onPressed: () async {
@@ -88,39 +174,47 @@ class ImageViewerVertical extends StatelessWidget {
                             }
                           },
                         ),
-                        PopupMenuButton<String>(icon: Icon(Icons.more_vert), onSelected: (value) {
-                          if (value == "addToAlbum") {
-                            showModalBottomSheet(context: context, builder: (context) {
-                              return AlbumSelectView(
-                                onSelect: (album) {
-                                  onAddImageToAlbum(album.id!,state.photos[state.current].id!);
-                                }
-                              );
-                            });
-                          }
-                          if (value == "viewModeAuto") {
-                            context.read<ViewerBloc>().add(SwitchViewModeEvent(viewMode: "auto"));
-                          }
-                          if (value == "viewModeFixed") {
-                            context.read<ViewerBloc>().add(SwitchViewModeEvent(viewMode: "fixed"));
-                          }
-                        }, itemBuilder: (context) {
-                          return [
-                            const PopupMenuItem(
-                              value: "addToAlbum",
-                              child: Text('Add to album'),
-                            ),
-                            PopupMenuDivider(),
-                            const PopupMenuItem(
-                              value: "viewModeAuto",
-                              child: Text('Auto Layout'),
-                            ),
-                            const PopupMenuItem(
-                              value: "viewModeFixed",
-                              child: Text('Fixed Layout'),
-                            ),
-                          ];
-                        },
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert),
+                          onSelected: (value) {
+                            if (value == "addToAlbum") {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlbumSelectView(onSelect: (album) {
+                                      onAddImageToAlbum(album.id!,
+                                          state.photos[state.current].id!);
+                                    });
+                                  });
+                            }
+                            if (value == "viewModeAuto") {
+                              context
+                                  .read<ViewerBloc>()
+                                  .add(SwitchViewModeEvent(viewMode: "auto"));
+                            }
+                            if (value == "viewModeFixed") {
+                              context
+                                  .read<ViewerBloc>()
+                                  .add(SwitchViewModeEvent(viewMode: "fixed"));
+                            }
+                          },
+                          itemBuilder: (context) {
+                            return [
+                              const PopupMenuItem(
+                                value: "addToAlbum",
+                                child: Text('Add to album'),
+                              ),
+                              PopupMenuDivider(),
+                              const PopupMenuItem(
+                                value: "viewModeAuto",
+                                child: Text('Auto Layout'),
+                              ),
+                              const PopupMenuItem(
+                                value: "viewModeFixed",
+                                child: Text('Fixed Layout'),
+                              ),
+                            ];
+                          },
                         )
                       ],
                       backgroundColor: Colors.transparent,
@@ -132,6 +226,11 @@ class ImageViewerVertical extends StatelessWidget {
                         },
                       ),
                     )
+                  : null,
+              endDrawer: (state.viewMode == "Fixed" || !isFolderDevice)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 64,
+                      child: imageInfoPanel)
                   : null,
               body: Stack(
                 children: [
@@ -151,7 +250,6 @@ class ImageViewerVertical extends StatelessWidget {
                                 context.read<ViewerBloc>().add(LoadMoreEvent());
                               }
                               onIndexChange(index);
-
                             },
                             controller: controller,
                             itemBuilder: _buildListItem,
@@ -165,66 +263,7 @@ class ImageViewerVertical extends StatelessWidget {
               ),
             )),
             isFolderDevice && state.viewMode == "auto"
-                ? Container(
-                    color: Theme.of(context).colorScheme.background,
-                    padding: EdgeInsets.only(top: 48,left: 16,right: 16),
-                    width: getHalfScreenLength(context),
-                    alignment: Alignment.topLeft,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            child: Text("Name",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-                            alignment: Alignment.centerLeft,
-                          ),
-                          Container(
-                            child: Text(currentPhotoItem.name??"",style: TextStyle(fontSize: 16),),
-                            alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.only(bottom: 16),
-                          ),
-                          Container(
-                            child: Text("Tags",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-                            alignment: Alignment.centerLeft,
-                          ),
-                          Wrap(
-                            spacing: 4,
-                            children: currentPhotoItem.tag.map((item) {
-                              return Chip(
-                                padding: EdgeInsets.all(2),
-                                label: Text(item.tag ?? ""),
-                              );
-                            }).toList(),
-                          ),
-                          Container(
-                            child: Text("Color",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-                            alignment: Alignment.centerLeft,
-                          ),
-                          Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
-                            children: currentPhotoItem.imageColors.map((item) {
-                              return Container(
-                                width: 96,
-                                decoration: BoxDecoration(
-                                    color: Color(int.parse(item.value!.replaceAll('#', '0xFF') )),
-                                  borderRadius: BorderRadius.circular(4)
-                                ),
-                                padding: EdgeInsets.all(8),
-
-                                child: Column(
-                                children: [
-                                  Text(item.value ?? "",style: TextStyle(color: getTextColor(item.value!)),),
-                                  Text((item.percent! * 100).toStringAsFixed(2) + "%",style: TextStyle(color: getTextColor(item.value!))),
-                                ],
-                              ),);
-                            }).toList(),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                ? imageInfoPanel
                 : Container()
           ],
         );

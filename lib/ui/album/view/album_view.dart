@@ -78,11 +78,15 @@ class AlbumDetailView extends StatelessWidget {
                                   child: BlocBuilder<AlbumBloc, AlbumState>(
                                     builder: (context, state) {
                                       return ImageDownloadProgressDialog(
-                                        total: state.downloadProgress?.total ?? 1,
-                                        current: state.downloadProgress?.current ?? 0,
-                                        currentName: state.downloadProgress?.name ?? "",
+                                        total:
+                                            state.downloadProgress?.total ?? 1,
+                                        current:
+                                            state.downloadProgress?.current ??
+                                                0,
+                                        currentName:
+                                            state.downloadProgress?.name ?? "",
                                       );
-                                },
+                                    },
                                   ),
                                 );
                               },
@@ -164,8 +168,7 @@ class AlbumDetailView extends StatelessWidget {
                                     context.read<AlbumBloc>().loader,
                                     index, (changedIndex) {
                                   double mainAxisSize = constraints.maxWidth;
-                                  double crossAxisSize =
-                                      constraints.maxHeight;
+                                  double crossAxisSize = constraints.maxHeight;
                                   int itemHeight =
                                       (mainAxisSize / crossAxisCount).floor();
                                   int itemInRowIndex =
@@ -184,8 +187,7 @@ class AlbumDetailView extends StatelessWidget {
                                   return;
                                 }
                                 context.read<AlbumBloc>().add(
-                                    OnChangeSelectModeEvent(
-                                        selectMode: true));
+                                    OnChangeSelectModeEvent(selectMode: true));
                                 context.read<AlbumBloc>().add(
                                     OnSelectPhotoEvent(
                                         photoId: state.photos[index].id!,
@@ -245,24 +247,35 @@ class AlbumDetailView extends StatelessWidget {
                                           "${state.selectedPhotoIds.length} selected"),
                                       IconButton(
                                           onPressed: () {
-                                            showDialog(context: context, builder:  (context){
-                                              return AlertDialog(
-                                                title: Text("Delete"),
-                                                content: Text("Are you sure to delete ${state.selectedPhotoIds.length} images?"),
-                                                actions: [
-                                                  TextButton(onPressed: (){
-                                                    Navigator.of(context).pop();
-                                                  }, child: Text("Cancel")),
-                                                  TextButton(onPressed: (){
-                                                    Navigator.of(context).pop();
-                                                    onRemoveSelectImages();
-                                                  }, child: Text("Delete"))
-                                                ],
-                                              );
-                                            });
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text("Delete"),
+                                                    content: Text(
+                                                        "Are you sure to delete ${state.selectedPhotoIds.length} images?"),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              Text("Cancel")),
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            onRemoveSelectImages();
+                                                          },
+                                                          child: Text("Delete"))
+                                                    ],
+                                                  );
+                                                });
                                           },
                                           icon: Icon(Icons.delete)),
-
                                     ],
                                   ),
                                 ),

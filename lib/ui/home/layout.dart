@@ -22,11 +22,11 @@ class HomeLayout extends StatelessWidget {
           },
           tabIndex: state.tabIndex,
           navItems: [
-            NavigationBarItem(icon: const Icon(Icons.home), label: "Home"),
-            NavigationBarItem(label: "album", icon: const Icon(Icons.photo_album)),
+            NavigationBarItem(icon: const Icon(Icons.home_rounded), label: "Home"),
+            NavigationBarItem(label: "album", icon: const Icon(Icons.photo_album_rounded)),
             NavigationBarItem(
-                icon: const Icon(Icons.photo_library), label: "Library"),
-            NavigationBarItem(icon: const Icon(Icons.person), label: "User")
+                icon: const Icon(Icons.phone_android_rounded), label: "Phone"),
+            NavigationBarItem(icon: const Icon(Icons.person_rounded), label: "User")
           ],
 
           action: Column(

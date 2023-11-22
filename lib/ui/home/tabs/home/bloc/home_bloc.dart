@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:youphotomobile/api/client.dart';
 import 'package:youphotomobile/api/image.dart';
+import 'package:youphotomobile/config.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -26,8 +27,10 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
       await loader.loadData(extraFilter: _getExtraParams(event.filter),force: true);
         emit(state.copyWith(photos: [...loader.list],filter: event.filter));
     });
-    on<UpdateViewModeEvent>((event, emit) async {
-      emit(state.copyWith(viewMode: event.viewMode));
+    on<UpdateGridSizeEvent>((event, emit) async {
+      emit(state.copyWith(gridSize: event.gridSize));
+      ApplicationConfig().config.imageGridSize = event.gridSize;
+      ApplicationConfig().updateConfig();
     });
     on<OnSelectPhotoEvent>((event, emit) async {
       List<int> selectedPhotoIds = [...state.selectedPhotoIds];
@@ -52,7 +55,7 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
   Map<String,dynamic> _getExtraParams(ImageQueryFilter filter) {
     Map<String,dynamic> result = {
       "order":filter.order,
-      "pageSize":"200",
+      "pageSize":100000,
       "random":filter.random ? "1" : "",
       "tag":filter.tag,
     };

@@ -30,18 +30,18 @@ class TabHomeVerticalPage extends StatelessWidget {
             children: [
               LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    int crossAxisCount = (constraints.maxWidth / 130).round();
-                    switch (state.viewMode) {
-                      case "large":
-                        crossAxisCount = (constraints.maxWidth / 170).round();
-                        break;
-                      case "medium":
-                        crossAxisCount = (constraints.maxWidth / 130).round();
-                        break;
-                      case "small":
-                        crossAxisCount = (constraints.maxWidth / 100).round();
-                        break;
-                    }
+                    int crossAxisCount = (constraints.maxWidth / state.gridSize).round();
+                    // switch (state.viewMode) {
+                    //   case "large":
+                    //     crossAxisCount = (constraints.maxWidth / 170).round();
+                    //     break;
+                    //   case "medium":
+                    //     crossAxisCount = (constraints.maxWidth / 130).round();
+                    //     break;
+                    //   case "small":
+                    //     crossAxisCount = (constraints.maxWidth / 100).round();
+                    //     break;
+                    // }
                     //      height: constraints.maxHeight,
                     //      width: constraints.maxWidth
                     return GridView.builder(

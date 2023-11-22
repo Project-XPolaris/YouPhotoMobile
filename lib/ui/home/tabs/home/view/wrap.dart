@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:youphotomobile/ui/components/PhotoFilter.dart';
 import 'package:youphotomobile/ui/components/ScreenWidthSelector.dart';
 import 'package:youphotomobile/ui/home/layout.dart';
+import 'package:youphotomobile/ui/home/tabs/home/view/vertical2.dart';
 
 import '../bloc/home_bloc.dart';
 import 'vertical.dart';
@@ -20,7 +21,7 @@ class TabHomeWrap extends StatelessWidget {
           return HomeLayout(
             child: Scaffold(
               body: const ScreenWidthSelector(
-                verticalChild: TabHomeVerticalPage(),
+                verticalChild: TabHomeVerticalPage2(),
               ),
               floatingActionButton: !state.selectMode?FloatingActionButton(
                 onPressed: () {
@@ -43,7 +44,19 @@ class TabHomeWrap extends StatelessWidget {
             ),
             actions: [
               PopupMenuButton<String>(icon: Icon(Icons.view_column), onSelected: (value) {
-                context.read<TabHomeBloc>().add(UpdateViewModeEvent(viewMode: value));
+                var newGridSize = 130;
+                switch (value) {
+                  case "large":
+                    newGridSize = 170;
+                    break;
+                  case "medium":
+                    newGridSize = 130;
+                    break;
+                  case "small":
+                    newGridSize = 100;
+                    break;
+                }
+                context.read<TabHomeBloc>().add(UpdateGridSizeEvent(gridSize: newGridSize));
               }, itemBuilder: (context) {
                 return [
                   PopupMenuItem(
