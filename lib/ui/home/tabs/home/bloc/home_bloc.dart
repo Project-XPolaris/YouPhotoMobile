@@ -55,7 +55,7 @@ class TabHomeBloc extends Bloc<HomeEvent, TabHomeState> {
   Map<String,dynamic> _getExtraParams(ImageQueryFilter filter) {
     Map<String,dynamic> result = {
       "order":filter.order,
-      "pageSize":100000,
+      "pageSize":200,
       "random":filter.random ? "1" : "",
       "tag":filter.tag,
     };

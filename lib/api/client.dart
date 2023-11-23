@@ -1,6 +1,7 @@
 
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:youphotomobile/api/image.dart';
 import 'package:youphotomobile/api/library.dart';
 
@@ -78,6 +79,18 @@ class ApiClient {
 
   Future removeAlbum(int albumId) async {
     await _dio.delete("/album/$albumId");
+  }
+  Future<Photo> uploadImage (Uint8List file,String filename,int libraryId ) async {
+    MultipartFile multipartFile = MultipartFile.fromBytes(file, filename: filename);
+    FormData formData = FormData.fromMap({
+      "file": multipartFile,
+    });
+    var response = await _dio.post("/image/upload", data: formData,queryParameters: {
+      "filename": filename,
+      "libraryId": libraryId
+    });
+    Photo responseBody = Photo.fromJson(response.data);
+    return responseBody;
   }
   ApiClient._internal();
 }

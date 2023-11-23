@@ -21,7 +21,7 @@ class TabHomeWrap extends StatelessWidget {
           return HomeLayout(
             child: Scaffold(
               body: const ScreenWidthSelector(
-                verticalChild: TabHomeVerticalPage2(),
+                verticalChild: TabHomeVerticalPage(),
               ),
               floatingActionButton: !state.selectMode?FloatingActionButton(
                 onPressed: () {

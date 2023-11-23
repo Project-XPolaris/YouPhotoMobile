@@ -20,7 +20,9 @@ class _TabLocalImageState extends State<TabLocalImage> {
   Future<void> _fetchPhotos() async {
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     if (ps.isAuth) {
-      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
+      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+      );
       if (albums.isNotEmpty) {
         setState(() {
           _albums = albums;

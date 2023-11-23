@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:youphotomobile/api/client.dart';
+import 'package:youphotomobile/notification.dart';
 
 import '../../../api/image.dart';
 
@@ -56,32 +57,49 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     });
     on<DownloadAllAlbumEvent>((event, emit) async {
       emit(state.copyWith(isDownloadingAll: true));
+
       var resp = await ApiClient().fetchImageList({
         "albumId":albumId,
-        "pageSize":100000,
+        "pageSize":1,
         "page":1
       });
-      if (resp.result.isEmpty) {
+      var total = resp.count ?? 0;
+      if (total == 0) {
         return;
       }
-      for (var photo in resp.result) {
-        print("download image from :" + photo.rawUrl);
-        emit(state.copyWith(downloadProgress: DownloadAllImageProgress(total: resp.result.length,current: resp.result.indexOf(photo),name: photo.name)));
-        var response = await Dio().get(
-            photo.rawUrl,
-            options: Options(
-                responseType: ResponseType.bytes));
-        try {
-          await ImageGallerySaver.saveImage(
-              Uint8List.fromList(response.data),
-              quality: 100,
-              name: photo.name);
-        } catch (e) {
-          print(e);
+      var count = 0;
+      var perPage = 200;
+      for (var page = 1; page <= (total / perPage).ceil(); page++) {
+        var resp = await ApiClient().fetchImageList({
+          "albumId":albumId,
+          "pageSize":perPage,
+          "page":page
+        });
+        if (resp.result.isEmpty) {
           continue;
         }
+        for (var photo in resp.result) {
+          print("download image from :" + photo.rawUrl);
+          // emit(state.copyWith(downloadProgress: DownloadAllImageProgress(total: total,current: resp.result.indexOf(photo),name: photo.name)));
+          NotificationPlugin().showDownloadNotification("Download image", photo.name!, count, total);
+          try {
+            var response = await Dio().get(
+                photo.rawUrl,
+                options: Options(
+                    responseType: ResponseType.bytes));
+            await ImageGallerySaver.saveImage(
+                Uint8List.fromList(response.data),
+                quality: 100,
+                name: photo.name);
+            count++;
+          } catch (e) {
+            print(e);
+            continue;
+          }
+        }
+        NotificationPlugin().flutterLocalNotificationsPlugin?.cancel(1);
       }
-      emit(state.copyWith(isDownloadingAll: false,downloadProgress: DownloadAllImageProgress(total:  resp.result.length, current:  resp.result.length)));
+      // emit(state.copyWith(isDownloadingAll: false,downloadProgress: DownloadAllImageProgress(total:  resp.result.length, current:  resp.result.length)));
     });
     on<RemoveSelectImagesEvent>((event, emit) async {
       await ApiClient().removeImageFromAlbum(albumId, state.selectedPhotoIds);

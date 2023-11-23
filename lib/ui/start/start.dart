@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:youphotomobile/config.dart';
+import 'package:youphotomobile/notification.dart';
 import 'package:youphotomobile/ui/home/wrap.dart';
 import 'package:youui/layout/login/LoginLayout.dart';
 
@@ -9,6 +11,16 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  void requestPermission() async {
+    await NotificationPlugin().init();
+  }
+
+  @override
+  void initState() {
+    requestPermission();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(

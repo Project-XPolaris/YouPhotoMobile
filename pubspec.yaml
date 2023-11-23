@@ -47,11 +47,12 @@ dependencies:
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   flutter_blurhash: ^0.7.0
-  image_gallery_saver: '^1.7.1'
+  image_gallery_saver: '^2.0.3'
   permission_handler: ^10.0.0
   flutter_windowmanager: ^0.2.0
   visibility_detector: ^0.4.0+2
   photo_manager: ^3.0.0-dev.2
+  flutter_local_notifications: ^16.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

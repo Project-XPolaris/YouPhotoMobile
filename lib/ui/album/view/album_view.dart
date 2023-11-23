@@ -68,29 +68,6 @@ class AlbumDetailView extends StatelessWidget {
                             context
                                 .read<AlbumBloc>()
                                 .add(DownloadAllAlbumEvent());
-                            var parContext = context;
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return BlocProvider.value(
-                                  value: BlocProvider.of<AlbumBloc>(parContext),
-                                  child: BlocBuilder<AlbumBloc, AlbumState>(
-                                    builder: (context, state) {
-                                      return ImageDownloadProgressDialog(
-                                        total:
-                                            state.downloadProgress?.total ?? 1,
-                                        current:
-                                            state.downloadProgress?.current ??
-                                                0,
-                                        currentName:
-                                            state.downloadProgress?.name ?? "",
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            );
                             break;
                         }
                       },
