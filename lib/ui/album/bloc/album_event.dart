@@ -57,9 +57,10 @@ class OnDownloadAllDoneEvent extends AlbumEvent {
   List<Object?> get props => [];
 }
 class DownloadAllAlbumEvent extends AlbumEvent {
-  DownloadAllAlbumEvent();
+  final String? localAlbumName;
+  DownloadAllAlbumEvent({this.localAlbumName});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [localAlbumName];
 }
 class RemoveSelectImagesEvent extends AlbumEvent {
   RemoveSelectImagesEvent();

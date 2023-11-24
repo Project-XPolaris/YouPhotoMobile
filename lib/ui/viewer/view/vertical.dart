@@ -4,10 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
+import 'package:youphotomobile/ui/components/LocalAlbumSelectView.dart';
 import 'package:youphotomobile/ui/viewer/bloc/viewer_bloc.dart';
 import 'package:youphotomobile/util/color.dart';
 
@@ -22,7 +23,8 @@ class ImageViewerVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isFolderDevice = checkFoldableDevice(context);
-    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     return BlocBuilder<ViewerBloc, ViewerState>(
       builder: (context, state) {
         void onAddImageToAlbum(int albumId, int imageId) {
@@ -32,26 +34,40 @@ class ImageViewerVertical extends StatelessWidget {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Added to album')));
         }
-
-        var currentPhotoItem = state.photos[state.current];
+        var currentPhotoItem = state.currentPhoto;
         var controller = PageController(
           initialPage: state.current,
         );
         Widget _buildListItem(BuildContext context, int index) {
           //horizontal
           var thumbnail = NetworkImage(state.photos[index].thumbnailUrl);
-          return Container(
-            child: PhotoView(
-              minScale: PhotoViewComputedScale.contained,
-              imageProvider: NetworkImage(
-                state.photos[index].rawUrl,
+          return GestureDetector(
+            onHorizontalDragEnd: (details) {
+              if (details.primaryVelocity!.compareTo(0) == -1) {
+                controller.nextPage(
+                    duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+              } else if (details.primaryVelocity!.compareTo(0) == 1) {
+                controller.previousPage(
+                    duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+              }
+            },
+            child: Container(
+              color: Theme.of(context).colorScheme.background,
+              child: PhotoView(
+                backgroundDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                ),
+                minScale: PhotoViewComputedScale.contained,
+                imageProvider: NetworkImage(
+                  state.photos[index].rawUrl,
+                ),
+                loadingBuilder: (context, progress) {
+                  return Image(
+                    image: thumbnail,
+                    fit: BoxFit.contain,
+                  );
+                },
               ),
-              loadingBuilder: (context, progress) {
-                return Image(
-                  image: thumbnail,
-                  fit: BoxFit.contain,
-                );
-              },
             ),
           );
         }
@@ -138,39 +154,65 @@ class ImageViewerVertical extends StatelessWidget {
           children: [
             Expanded(
                 child: Scaffold(
-                  key: _scaffoldKey,
+              key: _scaffoldKey,
               extendBodyBehindAppBar: true,
               appBar: state.showUI
                   ? AppBar(
                       title: Text(
-                        '${state.photos[state.current].name}',
+                        '${currentPhotoItem.name}',
                         style: const TextStyle(fontSize: 18),
                       ),
                       actions: [
-                        IconButton(onPressed: () {
-                          _scaffoldKey.currentState!.openEndDrawer();
-                        }, icon: const Icon(Icons.info_outline)),
+                        IconButton(
+                            onPressed: () {
+                              _scaffoldKey.currentState!.openEndDrawer();
+                            },
+                            icon: const Icon(Icons.info_outline)),
                         IconButton(
                           icon: const Icon(Icons.download),
                           onPressed: () async {
                             if (await Permission.storage.request().isGranted) {
                               var response = await Dio().get(
-                                  state.photos[state.current].rawUrl,
+                                  currentPhotoItem.rawUrl,
                                   options: Options(
                                       responseType: ResponseType.bytes));
-                              try {
-                                await ImageGallerySaver.saveImage(
-                                    Uint8List.fromList(response.data),
-                                    quality: 60,
-                                    name: state.photos[state.current].name);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Saved')));
-                              } catch (e) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text('Error saving image'),
-                                ));
-                              }
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: LocalAlbumSelectView(
+                                        onAlbumSelected:
+                                            (String? albumName) async {
+                                          Navigator.of(context).pop();
+                                          var saveRelativePath = "Pictures";
+                                          if (albumName != null) {
+                                            saveRelativePath =
+                                                "Pictures/" + albumName;
+                                          }
+                                          try {
+                                            await SaverGallery.saveImage(
+                                                Uint8List.fromList(
+                                                    response.data),
+                                                quality: 100,
+                                                name: currentPhotoItem.name!,
+                                                androidRelativePath:
+                                                    saveRelativePath,
+                                                androidExistNotSave: false);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text('Saved')));
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                              content:
+                                                  Text('Error saving image'),
+                                            ));
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  });
                             }
                           },
                         ),
@@ -182,8 +224,8 @@ class ImageViewerVertical extends StatelessWidget {
                                   context: context,
                                   builder: (context) {
                                     return AlbumSelectView(onSelect: (album) {
-                                      onAddImageToAlbum(album.id!,
-                                          state.photos[state.current].id!);
+                                      onAddImageToAlbum(
+                                          album.id!, currentPhotoItem.id!);
                                     });
                                   });
                             }
@@ -227,7 +269,7 @@ class ImageViewerVertical extends StatelessWidget {
                       ),
                     )
                   : null,
-              endDrawer: (state.viewMode == "Fixed" || !isFolderDevice)
+              endDrawer: (state.viewMode == "fixed" || !isFolderDevice)
                   ? Container(
                       width: MediaQuery.of(context).size.width - 64,
                       child: imageInfoPanel)
@@ -241,8 +283,6 @@ class ImageViewerVertical extends StatelessWidget {
                           child: PageView.builder(
                             allowImplicitScrolling: true,
                             onPageChanged: (index) {
-                              print(index);
-                              print("update");
                               context
                                   .read<ViewerBloc>()
                                   .add(IndexChangedEvent(index: index));

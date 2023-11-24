@@ -1,11 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.projectxpolaris.youphotomobile">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"   tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- 如果需要读取图片 -->
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 如果需要读取视频 -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- 如果需要读取音频 -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" /> <!-- 这是一个可选的配置，不指定并不影响在代码中使用它 -->
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"

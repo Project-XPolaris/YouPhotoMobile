@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/components/ImageDownloadProgressDialog.dart';
+import 'package:youphotomobile/ui/components/LocalAlbumSelectView.dart';
 
 import '../../../api/album.dart';
 import '../../../util/listview.dart';
@@ -16,6 +17,7 @@ class AlbumDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return BlocProvider(
         create: (_) =>
             AlbumBloc(albumId: album.id)..add(LoadDataEvent(force: false)),
@@ -26,8 +28,13 @@ class AlbumDetailView extends StatelessWidget {
             onRemoveSelectImages() {
               context.read<AlbumBloc>().add(RemoveSelectImagesEvent());
             }
-
+            void onDownloadAllAlbum(String? albumName) {
+              context
+                  .read<AlbumBloc>()
+                  .add(DownloadAllAlbumEvent(localAlbumName: albumName));
+            }
             return Scaffold(
+              key: scaffoldKey,
               appBar: AppBar(
                 title: Text(album.displayName),
                 leading: IconButton(
@@ -65,9 +72,17 @@ class AlbumDetailView extends StatelessWidget {
                       onSelected: (value) {
                         switch (value) {
                           case "downloadAll":
-                            context
-                                .read<AlbumBloc>()
-                                .add(DownloadAllAlbumEvent());
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                      padding: const EdgeInsets.all(16),
+                                      child: LocalAlbumSelectView(
+                                          onAlbumSelected: (albumName) {
+                                        onDownloadAllAlbum(albumName);
+                                        Navigator.of(context).pop();
+                                      }),
+                                    ));
+
                             break;
                         }
                       },

@@ -13,7 +13,6 @@ class ImageQueryFilter {
     String? order,
     bool? random,
     List<String>? libraryIds,
-    String? gridSize,
     List<String>? tag,
   }) {
     return ImageQueryFilter(

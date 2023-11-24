@@ -92,5 +92,10 @@ class ApiClient {
     Photo responseBody = Photo.fromJson(response.data);
     return responseBody;
   }
+  Future<Photo> fetchImage(int imageId) async {
+    var response = await _dio.get("/image/$imageId");
+    Photo responseBody = Photo.fromJson(response.data["data"]);
+    return responseBody;
+  }
   ApiClient._internal();
 }

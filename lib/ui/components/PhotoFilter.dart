@@ -23,6 +23,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
   ImageQueryFilter filter;
   List<Library> libraries = [];
   List<String> filterTags = [];
+  List<String> checkedTags = [];
   bool isEditTagMode = false;
 
   _PhotoFilterViewState({required this.filter});
@@ -91,7 +92,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
           selectedColor: Theme.of(context).colorScheme.primaryContainer,
           value: getOrder(),
           onSelectChange: (option) async {
-            ImageQueryFilter newFilter = widget.filter;
+            ImageQueryFilter newFilter = filter;
             if (option.key == "random") {
               newFilter = newFilter.copyWith(random: true);
             } else {
@@ -127,7 +128,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
             ],
             checked: getSelectLibrary(),
             onValueChange: (option, selected, newChecked) {
-              ImageQueryFilter newFilter = widget.filter;
+              ImageQueryFilter newFilter = filter;
               if (option.key == "all") {
                 newFilter = newFilter.copyWith(libraryIds: []);
               } else {
@@ -191,12 +192,11 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                 ],
                 checked: filter.tag,
                 onValueChange: (option, selected, newChecked) {
-                  ImageQueryFilter newFilter = widget.filter;
+                  ImageQueryFilter newFilter = filter;
                   newFilter = newFilter.copyWith(tag: newChecked);
                   setState(() {
                     filter = newFilter;
                   });
-                  print(newFilter.tag);
                   widget.onFilterChange(newFilter);
                 },
                 selectedColor: Theme.of(context).colorScheme.primaryContainer,

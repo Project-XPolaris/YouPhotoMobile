@@ -31,7 +31,7 @@ class ImageViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ViewerBloc(loader: photoLoader, current: initIndex),
+      create: (context) => ViewerBloc(loader: photoLoader, current: initIndex)..add(IndexChangedEvent(index: initIndex)),
       child: Scaffold(
         body: ScreenWidthSelector(
           verticalChild: ImageViewerVertical(
