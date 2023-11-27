@@ -106,6 +106,7 @@ class _AlbumViewState extends State<AlbumView> {
               )
                 ),
             floatingActionButton: FloatingActionButton(
+              heroTag: "albumlist",
               onPressed: () {
                 showDialog(
                     context: context,

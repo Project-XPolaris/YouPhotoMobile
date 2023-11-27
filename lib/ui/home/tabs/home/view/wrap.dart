@@ -24,6 +24,7 @@ class TabHomeWrap extends StatelessWidget {
                 verticalChild: TabHomeVerticalPage(),
               ),
               floatingActionButton: !state.selectMode?FloatingActionButton(
+                heroTag: "hometab",
                 onPressed: () {
                   showModalBottomSheet(
                       context: context,

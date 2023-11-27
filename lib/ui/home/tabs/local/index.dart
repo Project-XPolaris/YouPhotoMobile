@@ -50,9 +50,34 @@ class _TabLocalImageState extends State<TabLocalImage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+
         children: _albums.map((album) {
           return ListTile(
             title: Text(album.name),
+            leading: FutureBuilder<Uint8List?>(
+              future: getAlbumThumb(album),
+              builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                  return Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: MemoryImage(snapshot.data!),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    width: 64,
+                    height: 64,
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                  );
+                }
+              },
+            ),
             subtitle: FutureBuilder(
               future: album.assetCountAsync,
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
@@ -74,6 +99,7 @@ class _TabLocalImageState extends State<TabLocalImage> {
           refresh();
         },
         child: Icon(Icons.refresh),
+        heroTag: "tablocal",
       )
     );
   }

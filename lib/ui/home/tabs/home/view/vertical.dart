@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youphotomobile/cache.dart';
 import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
 import 'package:youphotomobile/util/listview.dart';
 
@@ -60,6 +62,10 @@ class TabHomeVerticalPage extends StatelessWidget {
                           errorWidget: (context, url, error) => Icon(Icons.error),
                           fit: BoxFit.cover,
                         );
+                        // var content = cacheImageWithHash(
+                        //     state.photos[index].thumbnailUrl!,
+                        //     state.photos[index].md5!,
+                        //     state.photos[index].name!);
                         return GestureDetector(
                           onTap: () async {
                             if (state.selectMode) {
@@ -78,6 +84,12 @@ class TabHomeVerticalPage extends StatelessWidget {
                                   // calc offset in center of grid
                                   double offset =
                                       (itemHeight * itemInRowIndex) - (crossAxisSize / 2);
+                                  if (offset < 0) {
+                                    offset = 0;
+                                  }
+                                  if (offset > controller.position.maxScrollExtent) {
+                                    offset = controller.position.maxScrollExtent;
+                                  }
                                   controller.jumpTo(offset);
                                 });
 
@@ -101,7 +113,26 @@ class TabHomeVerticalPage extends StatelessWidget {
                                       ),
                                       width: double.infinity,
                                       height: double.infinity,
-                                      child: content
+                                      child:
+                                      content,
+                                      // FutureBuilder<Uint8List>(
+                                      //   future: content,
+                                      //   builder: (BuildContext context,
+                                      //       AsyncSnapshot<Uint8List?> snapshot) {
+                                      //     if (snapshot.hasData) {
+                                      //       return Image.memory(
+                                      //         snapshot.data!,
+                                      //         fit: BoxFit.cover,
+                                      //       );
+                                      //     } else {
+                                      //       return Container(
+                                      //         color: Theme.of(context)
+                                      //             .colorScheme
+                                      //             .primaryContainer,
+                                      //       );
+                                      //     }
+                                      //   },
+                                      // )
                                   ),
                                 ]
                             ),

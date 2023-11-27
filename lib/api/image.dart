@@ -47,6 +47,7 @@ class Photo {
   String? createdAt;
   String? updatedAt;
   String? blurHash;
+  String? md5;
   List<PhotoTag> tag = [];
   List<PhotoColor> imageColors = [];
   Function(int)? onIndexChange;
@@ -56,6 +57,7 @@ class Photo {
     thumbnail = json['thumbnail'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    md5 = json['md5'];
     blurHash = json['blurHash'];
     if (json['tag'] != null) {
       tag = [];

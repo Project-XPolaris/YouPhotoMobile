@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
@@ -34,6 +35,7 @@ class ImageViewerVertical extends StatelessWidget {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Added to album')));
         }
+
         var currentPhotoItem = state.currentPhoto;
         var controller = PageController(
           initialPage: state.current,
@@ -42,20 +44,24 @@ class ImageViewerVertical extends StatelessWidget {
           //horizontal
           var thumbnail = NetworkImage(state.photos[index].thumbnailUrl);
           return GestureDetector(
-            onHorizontalDragEnd: (details) {
-              if (details.primaryVelocity!.compareTo(0) == -1) {
-                controller.nextPage(
-                    duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-              } else if (details.primaryVelocity!.compareTo(0) == 1) {
-                controller.previousPage(
-                    duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-              }
-            },
+            // onHorizontalDragEnd: (details) {
+            //   if (details.primaryVelocity!.compareTo(0) == -1) {
+            //     controller.nextPage(
+            //         duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+            //   } else if (details.primaryVelocity!.compareTo(0) == 1) {
+            //     controller.previousPage(
+            //         duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+            //   }
+            // },
             child: Container(
-              color: Theme.of(context).colorScheme.background,
+              color: state.showUI
+                  ? Theme.of(context).colorScheme.background
+                  : Colors.black,
               child: PhotoView(
                 backgroundDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.background,
+                  color: state.showUI
+                      ? Theme.of(context).colorScheme.background
+                      : Colors.black,
                 ),
                 minScale: PhotoViewComputedScale.contained,
                 imageProvider: NetworkImage(
@@ -67,6 +73,22 @@ class ImageViewerVertical extends StatelessWidget {
                     fit: BoxFit.contain,
                   );
                 },
+                onTapUp: (context, details, controllerValue) {
+                  if (state.showUI) {
+                    context
+                        .read<ViewerBloc>()
+                        .add(SwitchUIEvent(showUI: false));
+                  } else {
+                    context.read<ViewerBloc>().add(SwitchUIEvent(showUI: true));
+                  }
+                },
+                scaleStateChangedCallback: (value) {
+                  if (value != PhotoViewScaleState.initial) {
+                    context
+                        .read<ViewerBloc>()
+                        .add(SwitchUIEvent(showUI: false));
+                  }
+                },
               ),
             ),
           );
@@ -74,7 +96,7 @@ class ImageViewerVertical extends StatelessWidget {
 
         Widget imageInfoPanel = Container(
           color: Theme.of(context).colorScheme.background,
-          padding: EdgeInsets.only(top: 48, left: 16, right: 16),
+          padding: EdgeInsets.only(top: 48, left: 16, right: 16, bottom: 16),
           width: getHalfScreenLength(context),
           alignment: Alignment.topLeft,
           child: SingleChildScrollView(
@@ -259,7 +281,10 @@ class ImageViewerVertical extends StatelessWidget {
                           },
                         )
                       ],
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .background
+                          .withOpacity(0.5),
                       elevation: 0,
                       leading: IconButton(
                         icon: const Icon(Icons.arrow_back),
@@ -310,21 +335,4 @@ class ImageViewerVertical extends StatelessWidget {
       },
     );
   }
-}
-
-class CustomPageViewScrollPhysics extends ScrollPhysics {
-  const CustomPageViewScrollPhysics({ScrollPhysics? parent})
-      : super(parent: parent);
-
-  @override
-  CustomPageViewScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return CustomPageViewScrollPhysics(parent: buildParent(ancestor)!);
-  }
-
-  @override
-  SpringDescription get spring => const SpringDescription(
-        mass: 500,
-        stiffness: 1000,
-        damping: 0.8,
-      );
 }
