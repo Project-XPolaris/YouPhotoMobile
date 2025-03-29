@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youui/components/navigation.dart';
-import 'package:youui/layout/home/home.dart';
 
 import 'bloc/home_bloc.dart';
 
@@ -11,33 +9,70 @@ class HomeLayout extends StatelessWidget {
 
   const HomeLayout({Key? key, required this.child, this.actions = const []})
       : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    bool isWideScreen = MediaQuery.of(context).size.width > 600;
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        return ResponsiveTabPageLayout(
-          onTabIndexChange: (index) {
-            context.read<HomeBloc>().add(IndexChangedEvent(index: index));
-          },
-          tabIndex: state.tabIndex,
-          navItems: [
-            NavigationBarItem(icon: const Icon(Icons.home_rounded), label: "Home"),
-            NavigationBarItem(label: "album", icon: const Icon(Icons.photo_album_rounded)),
-            NavigationBarItem(
-                icon: const Icon(Icons.phone_android_rounded), label: "Phone"),
-            NavigationBarItem(icon: const Icon(Icons.person_rounded), label: "User")
-          ],
-
-          action: Column(
-            children: actions,
-          ),
-          appbar: AppBar(
+        return Scaffold(
+          appBar: AppBar(
             title: const Text("YouPhoto"),
             elevation: 0,
             actions: actions,
           ),
-          body: child,
+          body: Container(
+              child: Row(
+            children: [
+              isWideScreen
+                  ? NavigationRail(
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.home_rounded),
+                          label: Text("Home"),
+                        ),
+                        NavigationRailDestination(
+                            icon: Icon(Icons.apps), label: Text("Library")),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.person_rounded),
+                          label: Text("User"),
+                        ),
+                      ],
+                      selectedIndex: state.tabIndex,
+                      onDestinationSelected: (index) {
+                        context
+                            .read<HomeBloc>()
+                            .add(IndexChangedEvent(index: index));
+                      },
+                    )
+                  : Container(),
+              Expanded(child: child)
+            ],
+          )),
+          bottomNavigationBar: isWideScreen
+              ? null
+              : Wrap(
+                  children: [
+                    BottomNavigationBar(
+                      items: const [
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.home_rounded), label: "Home"),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.apps), label: "Library"),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.person_rounded), label: "User"),
+                      ],
+                      currentIndex: state.tabIndex,
+                      onTap: (index) {
+                        context
+                            .read<HomeBloc>()
+                            .add(IndexChangedEvent(index: index));
+                      },
+                      selectedItemColor: Theme.of(context).colorScheme.primary,
+                      unselectedItemColor:
+                          Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ],
+                ),
         );
       },
     );

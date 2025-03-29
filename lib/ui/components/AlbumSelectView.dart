@@ -25,17 +25,17 @@ class _AlbumSelectViewState extends State<AlbumSelectView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Select album",style: TextStyle(fontSize: 16),),
+          const Text("Select album",style: TextStyle(fontSize: 16),),
           Expanded(child: Container(
-            margin: EdgeInsets.only(top: 16),
+            margin: const EdgeInsets.only(top: 16),
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 6,
                 childAspectRatio: 1.0,
                 crossAxisSpacing: 4.0,
@@ -53,7 +53,7 @@ class _AlbumSelectViewState extends State<AlbumSelectView> {
                                   color: Theme.of(context).colorScheme.primaryContainer,
                                   borderRadius: BorderRadius.circular(8)
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Icon(Icons.photo_album),
                               ),
                             ),

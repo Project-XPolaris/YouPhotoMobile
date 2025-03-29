@@ -11,7 +11,7 @@ class PhotoFilterView extends StatefulWidget {
   final ImageQueryFilter filter;
   final Function onFilterChange;
 
-  PhotoFilterView(
+  const PhotoFilterView(
       {Key? key, required this.filter, required this.onFilterChange})
       : super(key: key);
 
@@ -25,6 +25,7 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
   List<String> filterTags = [];
   List<String> checkedTags = [];
   bool isEditTagMode = false;
+  String selectedTab = "base";
 
   _PhotoFilterViewState({required this.filter});
 
@@ -84,11 +85,11 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
       return filter.libraryIds;
     }
 
-    return FilterView(
-      title: "Photo Filter",
-      children: [
+    List<Widget> renderBaseFilters() {
+      return [
         SigleSelectFilterView(
-          textBoxPadding: EdgeInsets.only(left: 16, right: 16),
+          textBoxPadding: const EdgeInsets.only(left: 16, right: 16),
+          chipContainerPadding: const EdgeInsets.only(left: 16, right: 16),
           selectedColor: Theme.of(context).colorScheme.primaryContainer,
           value: getOrder(),
           onSelectChange: (option) async {
@@ -109,40 +110,12 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
             SelectOption(label: "Add date desc", key: "id desc"),
             SelectOption(label: "Random", key: "random"),
           ],
-          chipContentPadding: EdgeInsets.all(4),
-          chipContainerPadding: EdgeInsets.only(left: 8, right: 8),
-          spacing: 4,
-          runSpacing: 4,
         ),
-        CheckChipFilterView(
-            title: "Libraries",
-            textBoxPadding: EdgeInsets.only(left: 16, right: 16),
-            options: [
-              SelectOption(label: "All", key: "all"),
-              ...libraries.map((library) {
-                return SelectOption(
-                  label: library.name!,
-                  key: "${library.id}",
-                );
-              }).toList()
-            ],
-            checked: getSelectLibrary(),
-            onValueChange: (option, selected, newChecked) {
-              ImageQueryFilter newFilter = filter;
-              if (option.key == "all") {
-                newFilter = newFilter.copyWith(libraryIds: []);
-              } else {
-                newFilter = newFilter.copyWith(
-                    libraryIds: newChecked
-                        .where((element) => element != "all")
-                        .toList());
-              }
-              setState(() {
-                filter = newFilter;
-              });
-              widget.onFilterChange(newFilter);
-            },
-            selectedColor: Theme.of(context).colorScheme.primaryContainer),
+      ];
+    }
+
+    List<Widget> renderTagsFilters() {
+      return [
         isEditTagMode
             ? Container(
                 child: Column(
@@ -150,20 +123,60 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      child: Text(
-                        "Tags",
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 16, right: 16),
+                              child: const Text(
+                                "Tags",
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isEditTagMode = !isEditTagMode;
+                                });
+                              },
+                              icon: const Icon(Icons.done)),
+                          IconButton(
+                              onPressed: () {
+                                // open text input dialog
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Add Tag"),
+                                        content: SizedBox(
+                                          width: 320,
+                                          child: TagSelectView(
+                                            onTagSelect: (tag) {
+                                              String nameToAdd = tag.tag!;
+                                              if (filterTags
+                                                  .contains(nameToAdd)) {
+                                                return;
+                                              }
+                                              onAddTag(tag.tag!);
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              icon: const Icon(Icons.add)),
+                          const SizedBox(width: 16),
+                        ],
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 8, right: 8),
+                      padding: const EdgeInsets.only(left: 8, right: 8),
                       child: Wrap(
                         spacing: 2,
                         runSpacing: 2,
                         children: filterTags.map((tag) {
                           return Chip(
-                            padding: EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(2),
                             label: Text(tag),
                             onDeleted: () {
                               onRemoveTag(tag);
@@ -176,12 +189,23 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                 ),
               )
             : CheckChipFilterView(
-                runSpacing: 2,
-                spacing: 2,
-                textBoxPadding: EdgeInsets.only(left: 16, right: 16),
-                chipContentPadding: EdgeInsets.all(4),
-                chipContainerPadding: EdgeInsets.only(left: 8, right: 8),
                 title: "Tags",
+                actions: Container(
+                  margin: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isEditTagMode = !isEditTagMode;
+                            });
+                          },
+                          icon: const Icon(Icons.edit))
+                    ],
+                  ),
+                ),
+                textBoxPadding: const EdgeInsets.only(left: 16, right: 16),
+                chipContainerPadding: const EdgeInsets.only(left: 16, right: 16),
                 options: [
                   ...filterTags.map((tag) {
                     return SelectOption(
@@ -200,43 +224,172 @@ class _PhotoFilterViewState extends State<PhotoFilterView> {
                   widget.onFilterChange(newFilter);
                 },
                 selectedColor: Theme.of(context).colorScheme.primaryContainer,
-                extraChildren: [],
               ),
-        Row(
-          children: [
-            TextButton(
-                onPressed: () {
-                  setState(() {
-                    isEditTagMode = !isEditTagMode;
-                  });
-                },
-                child: Text(isEditTagMode ? "Done" : "Edit Tag")),
-            TextButton(
-                onPressed: () {
-                  // open text input dialog
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Add Tag"),
-                          content: Container(
-                            width: 320,
-                            child: TagSelectView(
-                              onTagSelect: (tag) {
-                                String nameToAdd = tag.tag!;
-                                if (filterTags.contains(nameToAdd)) {
-                                  return;
-                                }
-                                onAddTag(tag.tag!);
-                              },
-                            ),
-                          ),
-                        );
-                      });
-                },
-                child: Text("Add Tag"))
+      ];
+    }
+
+    List<Widget> renderAdvanceFilters() {
+      return [
+        SigleSelectFilterView(
+          selectedColor: Theme.of(context).colorScheme.primaryContainer,
+          textBoxPadding: const EdgeInsets.only(left: 16, right: 16),
+          chipContainerPadding: const EdgeInsets.only(left: 16, right: 16),
+          value: filter.orient,
+          onSelectChange: (option) async {
+            ImageQueryFilter newFilter = filter;
+            newFilter = newFilter.copyWith(orient: option.key);
+            setState(() {
+              filter = newFilter;
+            });
+            widget.onFilterChange(newFilter);
+          },
+          title: "Orientation",
+          options: [
+            SelectOption(label: "all", key: "all"),
+            SelectOption(label: "landscape", key: "landscape"),
+            SelectOption(label: "portrait", key: "portrait"),
+            SelectOption(label: "square", key: "square"),
           ],
         ),
+        SigleSelectFilterView(
+          selectedColor: Theme.of(context).colorScheme.primaryContainer,
+          textBoxPadding: const EdgeInsets.only(left: 16, right: 16),
+          chipContainerPadding: const EdgeInsets.only(left: 16, right: 16),
+          value: filter.resolution,
+          onSelectChange: (option) async {
+            ImageQueryFilter newFilter = filter;
+            newFilter = newFilter.copyWith(resolution: option.key);
+            setState(() {
+              filter = newFilter;
+            });
+            widget.onFilterChange(newFilter);
+          },
+          title: "Resolution",
+          options: [
+            SelectOption(label: "all", key: "all"),
+            SelectOption(label: "1080P", key: "1080"),
+            SelectOption(label: "2K", key: "2k"),
+            SelectOption(label: "4K", key: "4k"),
+            SelectOption(label: "8K", key: "8k"),
+          ],
+        ),
+      ];
+    }
+
+    List<Widget> renderLibraryFilters() {
+      return [
+        CheckChipFilterView(
+            title: "Libraries",
+            textBoxPadding: const EdgeInsets.only(left: 16, right: 16),
+            chipContainerPadding: const EdgeInsets.only(left: 16, right: 16),
+            options: [
+              SelectOption(label: "All", key: "all"),
+              ...libraries.map((library) {
+                return SelectOption(
+                  label: library.name!,
+                  key: "${library.id}",
+                );
+              }).toList()
+            ],
+            actions: Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        filter = filter.copyWith(libraryIds: []);
+                      });
+                      widget.onFilterChange(filter);
+                    },
+                    icon: const Icon(Icons.clear)),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        filter = filter.copyWith(
+                            libraryIds:
+                                libraries.map((e) => e.id.toString()).toList());
+                      });
+                      widget.onFilterChange(filter);
+                    },
+                    icon: const Icon(Icons.check)),
+              ],
+            ),
+            checked: getSelectLibrary(),
+            onValueChange: (option, selected, newChecked) {
+              ImageQueryFilter newFilter = filter;
+              if (option.key == "all") {
+                newFilter = newFilter.copyWith(libraryIds: []);
+              } else {
+                newFilter = newFilter.copyWith(
+                    libraryIds: newChecked
+                        .where((element) => element != "all")
+                        .toList());
+              }
+              setState(() {
+                filter = newFilter;
+              });
+              widget.onFilterChange(newFilter);
+            },
+            selectedColor: Theme.of(context).colorScheme.primaryContainer)
+      ];
+    }
+
+    return FilterView(
+      title: "Photo Filter",
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          child: Row(
+            children: [
+              FilterChip(
+                label: const Text("Base"),
+                selected: selectedTab == "base",
+                onSelected: (selected) {
+                  setState(() {
+                    selectedTab = "base";
+                  });
+                },
+                showCheckmark: false,
+              ),
+              const SizedBox(width: 8), // Set the width to your desired spacing
+              FilterChip(
+                  label: const Text("Tags"),
+                  showCheckmark: false,
+                  selected: selectedTab == "tags",
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedTab = "tags";
+                    });
+                  }),
+              const SizedBox(width: 8), // Set the width to your desired spacing
+
+              FilterChip(
+                  label: const Text("Library"),
+                  showCheckmark: false,
+                  selected: selectedTab == "library",
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedTab = "library";
+                    });
+                  }),
+              const SizedBox(width: 8), // Set the width to your desired spacing
+              FilterChip(
+                  label: const Text("Advance"),
+                  showCheckmark: false,
+                  selected: selectedTab == "advance",
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedTab = "advance";
+                    });
+                  }),
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        if (selectedTab == "base") ...renderBaseFilters(),
+        if (selectedTab == "tags") ...renderTagsFilters(),
+        if (selectedTab == "advance") ...renderAdvanceFilters(),
+        if (selectedTab == "library") ...renderLibraryFilters(),
       ],
     );
   }

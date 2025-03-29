@@ -92,7 +92,7 @@ BEGIN
             VALUE "CompanyName", "com.projectxpolaris" "\0"
             VALUE "FileDescription", "youphotomobile" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "youphotomobile" "\0"
+            VALUE "InternalName", "com.projectxpolaris.youphotomobile" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.projectxpolaris. All rights reserved." "\0"
             VALUE "OriginalFilename", "youphotomobile.exe" "\0"
             VALUE "ProductName", "youphotomobile" "\0"

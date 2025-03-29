@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/home/layout.dart';
-import 'package:youui/components/gridview.dart';
 
 import '../../../../../util/listview.dart';
 import '../../../../album/view/album_view.dart';
@@ -20,11 +19,11 @@ class _AlbumViewState extends State<AlbumView> {
   Widget build(BuildContext context) {
     return HomeLayout(
         child: BlocProvider<AlbumBloc>(
-      create: (_) => AlbumBloc()..add(LoadDataEvent(force: false)),
+      create: (_) => AlbumBloc()..add(const LoadDataEvent(force: false)),
       child: BlocBuilder<AlbumBloc, AlbumState>(
         builder: (context, state) {
           ScrollController controller = createLoadMoreController(() =>
-              context.read<AlbumBloc>().add(LoadMoreEvent()));
+              context.read<AlbumBloc>().add(const LoadMoreEvent()));
           onCreateAlbum(String name) {
             print("CreateAlbumEvent");
             context.read<AlbumBloc>().add(CreateAlbumEvent(name: name));
@@ -39,8 +38,8 @@ class _AlbumViewState extends State<AlbumView> {
               margin: const EdgeInsets.only(top: 16),
               child:RefreshIndicator(
                 onRefresh: (){
-                  context.read<AlbumBloc>().add(LoadDataEvent(force: true));
-                  return Future.delayed(Duration(seconds: 1));
+                  context.read<AlbumBloc>().add(const LoadDataEvent(force: true));
+                  return Future.delayed(const Duration(seconds: 1));
                 },
                 child: GridView.builder(
                   controller: controller,
@@ -83,13 +82,13 @@ class _AlbumViewState extends State<AlbumView> {
                       },
                       onLongPress: (){
                         showBottomSheet(context: context, builder: (context){
-                          return Container(
+                          return SizedBox(
                             height: 100,
                             child: Column(
                               children: [
                                 ListTile(
-                                  leading: Icon(Icons.delete),
-                                  title: Text("Delete"),
+                                  leading: const Icon(Icons.delete),
+                                  title: const Text("Delete"),
                                   onTap: (){
                                     context.read<AlbumBloc>().add(RemoveAlbumEvent(id: state.albumList[index].id!));
                                     Navigator.of(context).pop();
@@ -112,7 +111,7 @@ class _AlbumViewState extends State<AlbumView> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text("Create album"),
+                        title: const Text("Create album"),
                         content:TextField(
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
@@ -128,7 +127,7 @@ class _AlbumViewState extends State<AlbumView> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("Cancel")),
+                              child: const Text("Cancel")),
                           TextButton(
                               onPressed: () {
                                 print(inputAlbumName);
@@ -136,12 +135,12 @@ class _AlbumViewState extends State<AlbumView> {
                                 Navigator.of(context).pop();
 
                               },
-                              child: Text("Create"))
+                              child: const Text("Create"))
                         ],
                       );
                     });
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             )
           );
         },

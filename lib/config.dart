@@ -5,17 +5,22 @@ class Config {
   String? viewerMode;
   int? imageGridSize;
   int? albumGridSize;
+  String? homeImageFitMode;
+  String? localImageFitMode;
   Config.fromJson(Map<String, dynamic> json) {
     viewerMode = json['viewerMode'];
     imageGridSize = json['imageGridSize'];
     albumGridSize = json['albumGridSize'];
-
+    homeImageFitMode = json['homeImageFitMode'] ?? "cover";
+    localImageFitMode = json['localImageFitMode'] ?? "cover";
   }
   toJson() {
     return {
       "viewerMode": viewerMode,
       "imageGridSize": imageGridSize,
       "albumGridSize": albumGridSize,
+      "homeImageFitMode": homeImageFitMode,
+      "localImageFitMode": localImageFitMode,
     };
   }
   Config();

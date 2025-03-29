@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:youphotomobile/config.dart';
 import 'package:youphotomobile/notification.dart';
@@ -10,6 +9,8 @@ import 'package:youphotomobile/ui/home/wrap.dart';
 import 'package:youui/layout/login/LoginLayout.dart';
 
 class StartPage extends StatefulWidget {
+  const StartPage({super.key});
+
   @override
   _StartPageState createState() => _StartPageState();
 }
@@ -48,7 +49,7 @@ class _StartPageState extends State<StartPage> {
           ApplicationConfig().token = loginAccount.token;
           Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePageWrap()));
+              context, MaterialPageRoute(builder: (context) => const HomePageWrap()));
         },
         title: "YouPhoto",
         subtitle: "ProjectXPolaris",

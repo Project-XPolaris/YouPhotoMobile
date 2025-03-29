@@ -28,7 +28,7 @@ class _TagSelectViewState extends State<TagSelectView> {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
                 color: Theme.of(context).colorScheme.primaryContainer),
@@ -36,7 +36,7 @@ class _TagSelectViewState extends State<TagSelectView> {
               children: [
                 Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "Search tag",
                     ),
@@ -49,9 +49,9 @@ class _TagSelectViewState extends State<TagSelectView> {
                 ),
                 IconButton(
                   style: ButtonStyle(
-                    padding: MaterialStateProperty.all(EdgeInsets.zero),
+                    padding: WidgetStateProperty.all(EdgeInsets.zero),
                   ),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search,
                   ),
                   onPressed: () {

@@ -1,13 +1,11 @@
-import 'dart:async';
-import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:youphotomobile/api/client.dart';
+import 'package:youphotomobile/config.dart';
 import 'package:youphotomobile/notification.dart';
-
+import 'package:crypto/crypto.dart';
 part 'local_album_event.dart';
 
 part 'local_album_state.dart';
@@ -26,6 +24,11 @@ class LocalAlbumBloc extends Bloc<LocalAlbumEvent, LocalAlbumState> {
           await entity.getAssetListRange(start: 0, end: 1000000);
       doUpload(assets, event.libraryId);
     });
+    on<UpdateImageFitEvent>((event, emit) async {
+      emit(state.copyWith(imageFit: event.imageFit));
+      ApplicationConfig().config.localImageFitMode = event.imageFit;
+      ApplicationConfig().updateConfig();
+    });
   }
 
   void doUpload(assets, libraryId) async {
@@ -36,6 +39,7 @@ class LocalAlbumBloc extends Bloc<LocalAlbumEvent, LocalAlbumState> {
         continue;
       }
       var fileBytes = await file.readAsBytes();
+
       var fileName = file.path.split("/").last;
       print("uploading $fileName");
       int progressPercent = index * 100 ~/ assets.length;
@@ -45,7 +49,12 @@ class LocalAlbumBloc extends Bloc<LocalAlbumEvent, LocalAlbumState> {
           index,
           assets.length);
       try {
-        await ApiClient().uploadImage(fileBytes, fileName, libraryId);
+        var fileMd5 = md5.convert(fileBytes);
+        var resp = await ApiClient().fetchImageList({"md5": fileMd5.toString(),"libraryId":libraryId.toString()});
+        if ((resp.count ?? 0) > 0) {
+          continue;
+        }
+        await ApiClient().uploadImage(fileBytes, fileName, libraryId,albumName: entity.name);
       }catch(e){
         print(e);
       }

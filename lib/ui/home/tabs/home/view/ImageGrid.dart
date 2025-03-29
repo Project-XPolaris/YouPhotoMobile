@@ -6,7 +6,7 @@ import 'package:youphotomobile/api/image.dart';
 class ImageGrid extends StatefulWidget {
   final Photo image;
 
-  ImageGrid({required this.image});
+  const ImageGrid({super.key, required this.image});
 
   @override
   State<ImageGrid> createState() => _ImageGridState();
@@ -19,7 +19,7 @@ class _ImageGridState extends State<ImageGrid> {
     if (isTriggered) {
       return CachedNetworkImage(
         imageUrl: widget.image.thumbnailUrl,
-        errorWidget: (context, url, error) => Icon(Icons.error),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
         fit: BoxFit.cover,
       );
     }

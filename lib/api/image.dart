@@ -2,6 +2,7 @@ import 'package:youphotomobile/api/base.dart';
 import 'package:youphotomobile/api/client.dart';
 import 'package:youphotomobile/api/loader.dart';
 import 'package:youphotomobile/config.dart';
+
 // {
 // "tag": "1girl",
 // "source": "auto",
@@ -13,9 +14,11 @@ class PhotoTag {
   String? source;
   double? rank;
   int? imageId;
+
   PhotoTag.fromJson(Map<String, dynamic> json) {
     tag = json['tag'];
   }
+
   PhotoTag({this.tag});
 }
 
@@ -32,6 +35,7 @@ class PhotoColor {
   double? percent;
   int? rank;
   int? cnt;
+
   PhotoColor.fromJson(Map<String, dynamic> json) {
     value = json['value'];
     imageId = json['imageId'];
@@ -40,6 +44,13 @@ class PhotoColor {
     cnt = json['cnt'];
   }
 }
+// "country": "France",
+// "administrativeArea1": "Île-de-France",
+// "administrativeArea2": "Département de Paris",
+// "locality": "Paris",
+// "route": "Quai François Mitterrand",
+// "streetNumber": "4",
+// "address": "4 Quai François Mitterrand, 75001 Paris, France"
 class Photo {
   int? id;
   String? name;
@@ -47,16 +58,32 @@ class Photo {
   String? createdAt;
   String? updatedAt;
   String? blurHash;
+  int? width;
+  int? height;
+  double? lat;
+  double? lng;
   String? md5;
   List<PhotoTag> tag = [];
   List<PhotoColor> imageColors = [];
+  late int libraryId;
+  String? address;
+  String? country;
+  String? administrativeArea1;
+  String? administrativeArea2;
+  String? locality;
+  String? route;
+  String? streetNumber;
+  String? premise;
   Function(int)? onIndexChange;
+
   Photo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     thumbnail = json['thumbnail'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    width = json['width'];
+    height = json['height'];
     md5 = json['md5'];
     blurHash = json['blurHash'];
     if (json['tag'] != null) {
@@ -71,14 +98,26 @@ class Photo {
         imageColors.add(PhotoColor.fromJson(v));
       });
     }
+    lat = json['lat'];
+    lng = json['lng'];
+    libraryId = json['libraryId'] ?? 0;
+    address = json['address'];
+    country = json['country'];
+    administrativeArea1 = json['administrativeArea1'];
+    administrativeArea2 = json['administrativeArea2'];
+    locality = json['locality'];
+    route = json['route'];
+    streetNumber = json['streetNumber'];
+    premise = json['premise'];
   }
 
   get thumbnailUrl {
     final token = ApplicationConfig().token;
-    return "${ApplicationConfig().serviceUrl}/thumbnail/${this.thumbnail}?a=${ApplicationConfig().token ?? ""}";
+    return "${ApplicationConfig().serviceUrl}/thumbnail/$thumbnail?a=${ApplicationConfig().token ?? ""}";
   }
+
   get rawUrl {
-    return "${ApplicationConfig().serviceUrl}/image/${id}/raw?a=${ApplicationConfig().token ?? ""}";
+    return "${ApplicationConfig().serviceUrl}/image/$id/raw?a=${ApplicationConfig().token ?? ""}";
   }
 }
 
@@ -87,7 +126,6 @@ class PhotoLoader extends ApiDataLoader<Photo> {
   Future<ListResponseWrap<Photo>> fetchData(Map<String, dynamic> params) {
     return ApiClient().fetchImageList(params);
   }
-
 }
 
 class PhotoTagLoader extends ApiDataLoader<PhotoTag> {

@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:youphotomobile/ui/init/init.dart';
 
 void main() {
-
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -15,28 +16,30 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'YouPhoto',
       theme: ThemeData(
-        appBarTheme: AppBarTheme(elevation: 0),
+        appBarTheme: const AppBarTheme(elevation: 0),
         brightness: Brightness.light,
         useMaterial3: true,
         colorSchemeSeed: const Color(0xffb5d27b),
         /* light theme settings */
       ),
       darkTheme: ThemeData(
-        appBarTheme: AppBarTheme(elevation: 0),
-        brightness: Brightness.dark,
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xffb5d27b)
-        /* dark theme settings */
-      ),
+          appBarTheme: const AppBarTheme(elevation: 0),
+          brightness: Brightness.dark,
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xffb5d27b)
+          /* dark theme settings */
+          ),
       themeMode: ThemeMode.system,
-      home: Index(),
+      home: const Index(),
     );
   }
 }
 
 class Index extends StatelessWidget {
+  const Index({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return InitPage();
+    return const InitPage();
   }
 }

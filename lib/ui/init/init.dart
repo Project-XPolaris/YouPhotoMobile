@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 import '../../config.dart';
 import '../start/start.dart';
 
 class InitPage extends StatefulWidget {
+  const InitPage({super.key});
+
   @override
   _InitPageState createState() => _InitPageState();
 }
@@ -33,11 +34,11 @@ class _InitPageState extends State<InitPage> {
         future: check(),
         builder: (context, snapshot) {
       if (snapshot.hasData) {
-        return StartPage();
+        return const StartPage();
       } else {
         return Container();
       }
     });
-    return StartPage();
+    return const StartPage();
   }
 }

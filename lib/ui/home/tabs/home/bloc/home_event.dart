@@ -6,7 +6,9 @@ abstract class HomeEvent extends Equatable {
 
 class LoadDataEvent extends HomeEvent {
   final bool force;
-  LoadDataEvent({this.force = false});
+
+  const LoadDataEvent({this.force = false});
+
   @override
   List<Object?> get props => [force];
 }
@@ -18,14 +20,18 @@ class LoadMoreEvent extends HomeEvent {
 
 class UpdateFilterEvent extends HomeEvent {
   final ImageQueryFilter filter;
-  UpdateFilterEvent({required this.filter});
+
+  const UpdateFilterEvent({required this.filter});
+
   @override
   List<Object?> get props => [filter];
 }
 
 class UpdateGridSizeEvent extends HomeEvent {
   final int gridSize;
-  UpdateGridSizeEvent({required this.gridSize});
+
+  const UpdateGridSizeEvent({required this.gridSize});
+
   @override
   List<Object?> get props => [gridSize];
 }
@@ -33,28 +39,56 @@ class UpdateGridSizeEvent extends HomeEvent {
 class OnSelectPhotoEvent extends HomeEvent {
   final int photoId;
   final bool selected;
-  OnSelectPhotoEvent({required this.photoId,required this.selected});
+
+  const OnSelectPhotoEvent({required this.photoId, required this.selected});
+
   @override
-  List<Object?> get props => [photoId,selected];
+  List<Object?> get props => [photoId, selected];
 }
 
 class OnChangeSelectModeEvent extends HomeEvent {
   final bool selectMode;
-  OnChangeSelectModeEvent({required this.selectMode});
+
+  const OnChangeSelectModeEvent({required this.selectMode});
+
   @override
   List<Object?> get props => [selectMode];
 }
 
 class OnUpdateSelectedPhotosEvent extends HomeEvent {
   final List<int> selectedPhotoIds;
-  OnUpdateSelectedPhotosEvent({required this.selectedPhotoIds});
+
+  const OnUpdateSelectedPhotosEvent({required this.selectedPhotoIds});
+
   @override
   List<Object?> get props => [selectedPhotoIds];
 }
+
 class OnAddSelectedPhotosEvent extends HomeEvent {
   final List<int> selectedPhotoIds;
- final albumId;
-  OnAddSelectedPhotosEvent({required this.selectedPhotoIds,required this.albumId});
+  final albumId;
+
+  const OnAddSelectedPhotosEvent(
+      {required this.selectedPhotoIds, required this.albumId});
+
   @override
-  List<Object?> get props => [selectedPhotoIds,albumId];
+  List<Object?> get props => [selectedPhotoIds, albumId];
+}
+
+class OnUpdateImageFitEvent extends HomeEvent {
+  final String fit;
+
+  const OnUpdateImageFitEvent({required this.fit});
+
+  @override
+  List<Object?> get props => [fit];
+}
+
+class OnDeleteSelectedPhotosEvent extends HomeEvent {
+  final bool deleteImages;
+
+  const OnDeleteSelectedPhotosEvent({required this.deleteImages});
+
+  @override
+  List<Object?> get props => [deleteImages];
 }

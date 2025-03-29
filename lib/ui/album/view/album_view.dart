@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youphotomobile/ui/components/ImageDownloadProgressDialog.dart';
 import 'package:youphotomobile/ui/components/LocalAlbumSelectView.dart';
 
 import '../../../api/album.dart';
@@ -20,13 +18,13 @@ class AlbumDetailView extends StatelessWidget {
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return BlocProvider(
         create: (_) =>
-            AlbumBloc(albumId: album.id)..add(LoadDataEvent(force: false)),
+            AlbumBloc(albumId: album.id)..add(const LoadDataEvent(force: false)),
         child: BlocBuilder<AlbumBloc, AlbumState>(
           builder: (context, state) {
             var controller = createLoadMoreController(
                 () => context.read<AlbumBloc>().add(LoadMoreEvent()));
             onRemoveSelectImages() {
-              context.read<AlbumBloc>().add(RemoveSelectImagesEvent());
+              context.read<AlbumBloc>().add(const RemoveSelectImagesEvent());
             }
             void onDownloadAllAlbum(String? albumName) {
               context
@@ -45,7 +43,7 @@ class AlbumDetailView extends StatelessWidget {
                 ),
                 actions: [
                   PopupMenuButton<String>(
-                      icon: Icon(Icons.view_column),
+                      icon: const Icon(Icons.view_column),
                       onSelected: (value) {
                         context
                             .read<AlbumBloc>()
@@ -68,7 +66,7 @@ class AlbumDetailView extends StatelessWidget {
                         ];
                       }),
                   PopupMenuButton<String>(
-                      icon: Icon(Icons.more_vert),
+                      icon: const Icon(Icons.more_vert),
                       onSelected: (value) {
                         switch (value) {
                           case "downloadAll":
@@ -142,7 +140,7 @@ class AlbumDetailView extends StatelessWidget {
                             var content = CachedNetworkImage(
                               imageUrl: state.photos[index].thumbnailUrl,
                               errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                                  const Icon(Icons.error),
                               fit: BoxFit.cover,
                             );
                             return GestureDetector(
@@ -179,7 +177,7 @@ class AlbumDetailView extends StatelessWidget {
                                   return;
                                 }
                                 context.read<AlbumBloc>().add(
-                                    OnChangeSelectModeEvent(selectMode: true));
+                                    const OnChangeSelectModeEvent(selectMode: true));
                                 context.read<AlbumBloc>().add(
                                     OnSelectPhotoEvent(
                                         photoId: state.photos[index].id!,
@@ -228,13 +226,13 @@ class AlbumDetailView extends StatelessWidget {
                                       IconButton(
                                           onPressed: () {
                                             context.read<AlbumBloc>().add(
-                                                OnChangeSelectModeEvent(
+                                                const OnChangeSelectModeEvent(
                                                     selectMode: false));
                                             context.read<AlbumBloc>().add(
-                                                OnUpdateSelectedPhotosEvent(
+                                                const OnUpdateSelectedPhotosEvent(
                                                     selectedPhotoIds: []));
                                           },
-                                          icon: Icon(Icons.close)),
+                                          icon: const Icon(Icons.close)),
                                       Text(
                                           "${state.selectedPhotoIds.length} selected"),
                                       IconButton(
@@ -243,7 +241,7 @@ class AlbumDetailView extends StatelessWidget {
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    title: Text("Delete"),
+                                                    title: const Text("Delete"),
                                                     content: Text(
                                                         "Are you sure to delete ${state.selectedPhotoIds.length} images?"),
                                                     actions: [
@@ -254,7 +252,7 @@ class AlbumDetailView extends StatelessWidget {
                                                                 .pop();
                                                           },
                                                           child:
-                                                              Text("Cancel")),
+                                                              const Text("Cancel")),
                                                       TextButton(
                                                           onPressed: () {
                                                             Navigator.of(
@@ -262,12 +260,12 @@ class AlbumDetailView extends StatelessWidget {
                                                                 .pop();
                                                             onRemoveSelectImages();
                                                           },
-                                                          child: Text("Delete"))
+                                                          child: const Text("Delete"))
                                                     ],
                                                   );
                                                 });
                                           },
-                                          icon: Icon(Icons.delete)),
+                                          icon: const Icon(Icons.delete)),
                                     ],
                                   ),
                                 ),

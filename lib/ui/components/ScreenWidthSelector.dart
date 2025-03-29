@@ -9,8 +9,8 @@ class ScreenWidthSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isWide = MediaQuery.of(context).size.width > 600;
     if (isWide) {
-      return this.horizonChild ?? this.verticalChild;
+      return horizonChild ?? verticalChild;
     }
-    return this.verticalChild;
+    return verticalChild;
   }
 }

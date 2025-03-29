@@ -9,5 +9,5 @@ class LibraryListState extends Equatable {
 }
 
 class LibraryListInitial extends LibraryListState {
-  LibraryListInitial({required List<Library> libraryList}) : super(libraryList: libraryList);
+  const LibraryListInitial({required List<Library> libraryList}) : super(libraryList: libraryList);
 }

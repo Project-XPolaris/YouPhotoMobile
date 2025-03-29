@@ -6,14 +6,24 @@ abstract class LocalAlbumEvent extends Equatable {
 
 class UploadToLibraryEvent extends LocalAlbumEvent {
   final int libraryId;
-  UploadToLibraryEvent({required this.libraryId});
+
+  const UploadToLibraryEvent({required this.libraryId});
 
   @override
   List<Object?> get props => [libraryId];
 }
 
 class LoadAssetsEvent extends LocalAlbumEvent {
-  LoadAssetsEvent();
+  const LoadAssetsEvent();
   @override
   List<Object?> get props => [];
+}
+
+class UpdateImageFitEvent extends LocalAlbumEvent {
+  final String imageFit;
+
+  const UpdateImageFitEvent({required this.imageFit});
+
+  @override
+  List<Object> get props => [imageFit];
 }

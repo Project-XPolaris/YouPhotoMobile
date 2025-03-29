@@ -33,8 +33,8 @@ class _LibrarySelectViewState extends State<LibrarySelectView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Text("Select library")
+            margin: const EdgeInsets.only(bottom: 10),
+            child: const Text("Select library")
           ),
           Expanded(
             child: ListView.builder(
@@ -43,12 +43,12 @@ class _LibrarySelectViewState extends State<LibrarySelectView> {
                 var item = items[index];
                 return ListTile(
                   title: Text(item.displayName),
-                  leading: Icon(Icons.photo_library),
+                  leading: const Icon(Icons.photo_library),
                   onTap: () {
                     widget.onSelected!(library: item);
                     Navigator.pop(context);
                   },
-                  contentPadding: EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
                 );
               },
             ),

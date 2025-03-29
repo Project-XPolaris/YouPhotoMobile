@@ -5,7 +5,7 @@ class ImageDownloadProgressDialog extends StatelessWidget {
   final int current;
   final String currentName;
 
-  ImageDownloadProgressDialog({
+  const ImageDownloadProgressDialog({super.key, 
     required this.total,
     required this.current,
     required this.currentName,
@@ -14,7 +14,7 @@ class ImageDownloadProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Image Download Progress'),
+      title: const Text('Image Download Progress'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -23,7 +23,7 @@ class ImageDownloadProgressDialog extends StatelessWidget {
             value: current / total,
             minHeight: 20.0,
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text('Downloaded $current out of $total'),
         ],
       ),
@@ -33,7 +33,7 @@ class ImageDownloadProgressDialog extends StatelessWidget {
             // You can implement actions like cancel or close here
             Navigator.pop(context);
           },
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
       ],
     );

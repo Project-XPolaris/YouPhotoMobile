@@ -89,9 +89,9 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
             await SaverGallery.saveImage(
               Uint8List.fromList(response.data),
               quality: 100,
-              name: photo.name!,
-              androidExistNotSave: true,
+              fileName: photo.name!,
               androidRelativePath: saveRelativePath,
+              skipIfExists: true
             );
             count++;
           } catch (e) {

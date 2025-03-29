@@ -9,7 +9,7 @@ class AlbumState extends Equatable {
 }
 
 class AlbumInitial extends AlbumState {
-  AlbumInitial({required List<Album> albumList}) : super(albumList: albumList);
+  const AlbumInitial({required List<Album> albumList}) : super(albumList: albumList);
 
   @override
   List<Object> get props => [];

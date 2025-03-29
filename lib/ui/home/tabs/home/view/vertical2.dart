@@ -1,6 +1,4 @@
-import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
@@ -87,7 +85,7 @@ class TabHomeVerticalPage2 extends StatelessWidget {
                           }
                           context
                               .read<TabHomeBloc>()
-                              .add(OnChangeSelectModeEvent(selectMode: true));
+                              .add(const OnChangeSelectModeEvent(selectMode: true));
                           context.read<TabHomeBloc>().add(OnSelectPhotoEvent(
                               photoId: state.photos[index].id!, selected: true));
                         },
@@ -129,13 +127,13 @@ class TabHomeVerticalPage2 extends StatelessWidget {
                               IconButton(
                                   onPressed: () {
                                     context.read<TabHomeBloc>().add(
-                                        OnChangeSelectModeEvent(
+                                        const OnChangeSelectModeEvent(
                                             selectMode: false));
                                     context.read<TabHomeBloc>().add(
-                                        OnUpdateSelectedPhotosEvent(
+                                        const OnUpdateSelectedPhotosEvent(
                                             selectedPhotoIds: []));
                                   },
-                                  icon: Icon(Icons.close)),
+                                  icon: const Icon(Icons.close)),
                               Text("${state.selectedPhotoIds.length} selected"),
                               IconButton(
                                   onPressed: () {
@@ -153,7 +151,7 @@ class TabHomeVerticalPage2 extends StatelessWidget {
                                           );
                                         });
                                   },
-                                  icon: Icon(Icons.photo_album_outlined)),
+                                  icon: const Icon(Icons.photo_album_outlined)),
                             ],
                           ),
                         ),

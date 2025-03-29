@@ -13,7 +13,7 @@ class HomePageWrap extends StatelessWidget {
       create: (context) => HomeBloc(),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return HomePageContent();
+          return const HomePageContent();
         },
       ),
     );

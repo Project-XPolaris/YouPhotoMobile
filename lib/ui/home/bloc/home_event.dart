@@ -6,7 +6,7 @@ abstract class HomeEvent extends Equatable {
 
 class IndexChangedEvent extends HomeEvent {
 final int index;
-  IndexChangedEvent({required this.index});
+  const IndexChangedEvent({required this.index});
   @override
   List<Object?> get props => [index];
 }

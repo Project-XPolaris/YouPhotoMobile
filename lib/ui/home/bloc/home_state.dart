@@ -9,5 +9,5 @@ class HomeState extends Equatable {
 }
 
 class HomeInitial extends HomeState {
-  HomeInitial() : super(tabIndex: 0);
+  const HomeInitial() : super(tabIndex: 0);
 }

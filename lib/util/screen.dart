@@ -16,8 +16,21 @@ bool checkFoldableDevice(BuildContext context) {
 
   // 计算屏幕横纵比
   double aspectRatio = adjustedWidth / adjustedHeight;
-  print(aspectRatio);
   return aspectRatio > 0.5;
+}
+
+bool checkIsTablet(BuildContext context) {
+  MediaQueryData mediaQuery = MediaQuery.of(context);
+
+  // 获取屏幕的宽度和高度
+  double screenWidth = mediaQuery.size.width;
+  double screenHeight = mediaQuery.size.height;
+  print(screenWidth);
+  print(screenHeight);
+  if (screenWidth > 600 && screenHeight > 600) {
+    return true;
+  }
+  return false;
 }
 
 double getHalfScreenLength(BuildContext context) {

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:youphotomobile/ui/components/PhotoFilter.dart';
 import 'package:youphotomobile/ui/components/ScreenWidthSelector.dart';
 import 'package:youphotomobile/ui/home/layout.dart';
-import 'package:youphotomobile/ui/home/tabs/home/view/vertical2.dart';
 
 import '../bloc/home_bloc.dart';
 import 'vertical.dart';
@@ -15,7 +13,7 @@ class TabHomeWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TabHomeBloc()..add(LoadDataEvent()),
+      create: (context) => TabHomeBloc()..add(const LoadDataEvent()),
       child: BlocBuilder<TabHomeBloc, TabHomeState>(
         builder: (context, state) {
           return HomeLayout(
@@ -39,11 +37,11 @@ class TabHomeWrap extends StatelessWidget {
                         );
                       });
                 },
-                child: Icon(Icons.filter_list),
+                child: const Icon(Icons.filter_list),
               ):null,
             ),
             actions: [
-              PopupMenuButton<String>(icon: Icon(Icons.view_column), onSelected: (value) {
+              PopupMenuButton<String>(icon: const Icon(Icons.view_column), onSelected: (value) {
                 var newGridSize = 130;
                 switch (value) {
                   case "large":
@@ -59,17 +57,31 @@ class TabHomeWrap extends StatelessWidget {
                 context.read<TabHomeBloc>().add(UpdateGridSizeEvent(gridSize: newGridSize));
               }, itemBuilder: (context) {
                 return [
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: "large",
                     child: Text('Large'),
                   ),
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: "medium",
                     child: Text('Medium'),
                   ),
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: "small",
                     child: Text('Small'),
+                  ),
+                ];
+              }),
+              PopupMenuButton<String>(icon: const Icon(Icons.apps), onSelected: (value) {
+                context.read<TabHomeBloc>().add(OnUpdateImageFitEvent(fit: value));
+              }, itemBuilder: (context) {
+                return [
+                  const PopupMenuItem(
+                    value: "cover",
+                    child: Text('Cover'),
+                  ),
+                  const PopupMenuItem(
+                    value: "contain",
+                    child: Text('Contain'),
                   ),
                 ];
               }),

@@ -6,7 +6,7 @@ typedef OnAlbumSelected = Function(String? albumName);
 class LocalAlbumSelectView extends StatefulWidget {
   final OnAlbumSelected onAlbumSelected;
 
-  LocalAlbumSelectView({required this.onAlbumSelected});
+  const LocalAlbumSelectView({super.key, required this.onAlbumSelected});
 
   @override
   _LocalAlbumSelectViewState createState() => _LocalAlbumSelectViewState();
@@ -29,7 +29,7 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           height: 50,
           child: const Center(
             child: Text(
@@ -39,24 +39,24 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
           ),
         ),
         ListTile(
-          title: Text("Directly save to gallery"),
+          title: const Text("Directly save to gallery"),
           onTap: () => widget.onAlbumSelected(null),
-          leading: Icon(Icons.download),
+          leading: const Icon(Icons.download),
         ),
         newAlbumName != null ? ListTile(
           title: Text(newAlbumName!),
           onTap: () => widget.onAlbumSelected(newAlbumName!),
-          leading: Icon(Icons.add_photo_alternate_outlined),
+          leading: const Icon(Icons.add_photo_alternate_outlined),
         ):Container(),
         ListTile(
-          title: Text('Create new album'),
-          leading: Icon(Icons.add),
+          title: const Text('Create new album'),
+          leading: const Icon(Icons.add),
           onTap: () => {
             showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text('Create new album'),
+                    title: const Text('Create new album'),
                     content: TextField(
                       onChanged: (value) {
                         inputNewAlbumName = value;
@@ -67,7 +67,7 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Cancel')),
+                          child: const Text('Cancel')),
                       TextButton(
                           onPressed: () async {
                             setState(() {
@@ -75,7 +75,7 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
                             });
                             Navigator.of(context).pop();
                           },
-                          child: Text('OK'))
+                          child: const Text('OK'))
                     ],
                   );
                 })
@@ -86,7 +86,7 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
             future: _albumList,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.error != null) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
@@ -96,7 +96,7 @@ class _LocalAlbumSelectViewState extends State<LocalAlbumSelectView> {
                     return ListTile(
                       title: Text(snapshot.data![index].name),
                       onTap: () => widget.onAlbumSelected(snapshot.data![index].name),
-                      leading: Icon(Icons.photo_album),
+                      leading: const Icon(Icons.photo_album),
                     );
                   },
                 );

@@ -6,14 +6,14 @@ abstract class AlbumEvent extends Equatable {
 class LoadDataEvent extends AlbumEvent {
   final bool force;
 
-  LoadDataEvent({required this.force});
+  const LoadDataEvent({required this.force});
 
   @override
   List<Object?> get props => [force];
 }
 
 class LoadMoreEvent extends AlbumEvent {
-  LoadMoreEvent();
+  const LoadMoreEvent();
 
   @override
   List<Object?> get props => [];
@@ -21,7 +21,7 @@ class LoadMoreEvent extends AlbumEvent {
 
 class CreateAlbumEvent extends AlbumEvent {
   final String name;
-  CreateAlbumEvent({required this.name});
+  const CreateAlbumEvent({required this.name});
 
   @override
   List<Object?> get props => [name];
@@ -29,7 +29,7 @@ class CreateAlbumEvent extends AlbumEvent {
 
 class RemoveAlbumEvent extends AlbumEvent {
   final int id;
-  RemoveAlbumEvent({required this.id});
+  const RemoveAlbumEvent({required this.id});
 
   @override
   List<Object?> get props => [id];

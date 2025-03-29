@@ -21,7 +21,7 @@ abstract class ApiDataLoader<T> {
       "page": page.toString(),
       "pageSize": pageSize.toString()
     };
-    Map<String,dynamic> params = new Map.from(queryParams);
+    Map<String,dynamic> params = Map.from(queryParams);
     params.addAll(extraFilter);
     var response = await fetchData(params);
     list = response.result;
@@ -41,7 +41,7 @@ abstract class ApiDataLoader<T> {
       "page": (page + 1).toString(),
       "pageSize": pageSize.toString()
     };
-    Map<String, dynamic> params = new Map.from(queryParams);
+    Map<String, dynamic> params = Map.from(queryParams);
     params.addAll(extraFilter);
     var response = await fetchData(params);
     list.addAll(response.result);
