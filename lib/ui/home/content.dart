@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/home/layout.dart';
 import 'package:youphotomobile/ui/home/tabs/home/view/wrap.dart';
 import 'package:youphotomobile/ui/home/tabs/source/view.dart';
+import 'package:youphotomobile/ui/home/tabs/user/view.dart';
 
 import 'bloc/home_bloc.dart';
 
@@ -18,7 +19,7 @@ class HomePageContent extends StatelessWidget {
           children: <Widget>[
             const TabHomeWrap(),
             const SourceTab(),
-            HomeLayout(child:Container()),
+            const UserTab(),
             // Container(),
             // Container(),
             // Container()

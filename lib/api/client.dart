@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:youphotomobile/api/image.dart';
 import 'package:youphotomobile/api/library.dart';
+import 'package:dio/io.dart';
 
 import '../config.dart';
 import 'album.dart';
@@ -12,6 +13,13 @@ class ApiClient {
   static final Dio _dio = Dio();
 
   factory ApiClient() {
+    if (!kIsWeb) {
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
+        client.badCertificateCallback = (cert, host, port) => true;
+        return client;
+      };
+    }
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest:
           (RequestOptions options, RequestInterceptorHandler handler) async {
@@ -138,5 +146,44 @@ class ApiClient {
     return response.data;
   }
 
+  Future<StateResponse> fetchState() async {
+    var response = await _dio.get("/state");
+    return StateResponse.fromJson(response.data);
+  }
+
+  Future<DataResponse<User>> fetchUser() async {
+    var response = await _dio.get("/user/current");
+    return DataResponse<User>.fromJson(
+      response.data,
+      (data) => User.fromJson(data),
+    );
+  }
+
   ApiClient._internal();
+}
+
+class StateResponse {
+  bool? nsfwEnable;
+  bool? deepdanbooruEnable;
+  bool? imageClassificationEnable;
+  bool? sdwEnable;
+  bool? imageTaggerEnable;
+
+  StateResponse.fromJson(Map<String, dynamic> json) {
+    nsfwEnable = json['nsfwEnable'];
+    deepdanbooruEnable = json['deepdanbooruEnable'];
+    imageClassificationEnable = json['imageClassificationEnable'];
+    sdwEnable = json['sdwEnable'];
+    imageTaggerEnable = json['imageTaggerEnable'];
+  }
+}
+
+class User {
+  String? id;
+  String? username;
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    username = json['username'];
+  }
 }

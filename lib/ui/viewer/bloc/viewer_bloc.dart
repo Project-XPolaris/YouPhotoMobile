@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:youphotomobile/api/client.dart';
@@ -10,25 +9,21 @@ part 'viewer_event.dart';
 part 'viewer_state.dart';
 
 class ViewerBloc extends Bloc<ViewerEvent, ViewerState> {
-  final PhotoLoader loader;
+  final List<Photo> photos;
 
-  ViewerBloc({required this.loader, required int current})
+  ViewerBloc({required this.photos, required int current})
       : super(ViewerInitial(
-            total: loader.list.length,
+            total: photos.length,
             current: current,
-            photos: [...loader.list],
+            photos: photos,
             viewMode: ApplicationConfig().config.viewerModeValue,
-            currentPhoto: loader.list[current])) {
+            currentPhoto: photos[current])) {
     on<IndexChangedEvent>((event, emit) async {
-      Photo currentPhoto = loader.list[event.index];
-      emit(state.copyWith(currentPhoto: currentPhoto,current: event.index));
-      Photo photo = await ApiClient().fetchImage(currentPhoto.id!);
-      emit(state.copyWith(currentPhoto: photo));
-    });
-    on<LoadMoreEvent>((event, emit) async {
-      if (await loader.loadMore()) {
-        emit(state
-            .copyWith(total: loader.list.length, photos: [...loader.list]));
+      if (event.index >= 0 && event.index < photos.length) {
+        Photo currentPhoto = photos[event.index];
+        emit(state.copyWith(currentPhoto: currentPhoto, current: event.index));
+        Photo photo = await ApiClient().fetchImage(currentPhoto.id!);
+        emit(state.copyWith(currentPhoto: photo));
       }
     });
     on<SwitchUIEvent>((event, emit) async {

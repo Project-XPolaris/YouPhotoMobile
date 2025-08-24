@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/components/AlbumSelectView.dart';
@@ -29,7 +28,8 @@ class TabHomeVerticalPage2 extends StatelessWidget {
             children: [
               LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                int crossAxisCount = (constraints.maxWidth / state.gridSize).round();
+                int crossAxisCount =
+                    (constraints.maxWidth / state.gridSize).round();
                 // switch (state.viewMode) {
                 //   case "large":
                 //     crossAxisCount = (constraints.maxWidth / 170).round();
@@ -59,12 +59,11 @@ class TabHomeVerticalPage2 extends StatelessWidget {
                           if (state.selectMode) {
                             context.read<TabHomeBloc>().add(OnSelectPhotoEvent(
                                 photoId: state.photos[index].id!,
-                                selected:
-                                    !state.isSelected(state.photos[index].id!)));
+                                selected: !state
+                                    .isSelected(state.photos[index].id!)));
                             return;
                           }
-                          await ImageViewer.Launch(
-                              context, context.read<TabHomeBloc>().loader, index,
+                          await ImageViewer.Launch(context, state.photos, index,
                               (changedIndex) {
                             double mainAxisSize = constraints.maxWidth;
                             double crossAxisSize = constraints.maxHeight;
@@ -83,18 +82,19 @@ class TabHomeVerticalPage2 extends StatelessWidget {
                           if (state.selectMode) {
                             return;
                           }
-                          context
-                              .read<TabHomeBloc>()
-                              .add(const OnChangeSelectModeEvent(selectMode: true));
+                          context.read<TabHomeBloc>().add(
+                              const OnChangeSelectModeEvent(selectMode: true));
                           context.read<TabHomeBloc>().add(OnSelectPhotoEvent(
-                              photoId: state.photos[index].id!, selected: true));
+                              photoId: state.photos[index].id!,
+                              selected: true));
                         },
                         child: Container(
                           child: Stack(children: [
                             Container(
-                                padding: state.isSelected(state.photos[index].id!)
-                                    ? const EdgeInsets.all(4)
-                                    : const EdgeInsets.all(0),
+                                padding:
+                                    state.isSelected(state.photos[index].id!)
+                                        ? const EdgeInsets.all(4)
+                                        : const EdgeInsets.all(0),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.tertiary,
                                 ),

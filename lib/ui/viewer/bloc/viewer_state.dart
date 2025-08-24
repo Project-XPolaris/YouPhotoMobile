@@ -16,8 +16,7 @@ class ViewerState extends Equatable {
       required this.photos,
       required this.viewMode,
       required this.currentPhoto,
-      this.extra
-      });
+      this.extra});
 
   ViewerState copyWith(
       {int? total,
@@ -26,8 +25,7 @@ class ViewerState extends Equatable {
       List<Photo>? photos,
       String? viewMode,
       Photo? currentPhoto,
-      Photo? extra
-      }) {
+      Photo? extra}) {
     return ViewerState(
         total: total ?? this.total,
         current: current ?? this.current,
@@ -35,13 +33,12 @@ class ViewerState extends Equatable {
         photos: photos ?? this.photos,
         viewMode: viewMode ?? this.viewMode,
         currentPhoto: currentPhoto ?? this.currentPhoto,
-        extra: extra ?? this.extra
-    );
+        extra: extra ?? this.extra);
   }
 
   @override
   List<Object?> get props =>
-      [total, current, showUI, photos, viewMode, currentPhoto,extra];
+      [total, current, showUI, photos, viewMode, currentPhoto, extra];
 }
 
 class ViewerInitial extends ViewerState {
@@ -51,8 +48,7 @@ class ViewerInitial extends ViewerState {
       required List<Photo> photos,
       required String viewMode,
       required Photo currentPhoto,
-      Photo? extra
-      })
+      Photo? extra})
       : super(
             total: total,
             current: current,
@@ -60,6 +56,5 @@ class ViewerInitial extends ViewerState {
             photos: photos,
             viewMode: viewMode,
             currentPhoto: currentPhoto,
-            extra: extra
-  );
+            extra: extra);
 }

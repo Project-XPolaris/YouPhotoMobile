@@ -8,7 +8,8 @@
         {
             "name": "youphotomobile",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "lib/main.dart"
         },
         {
             "name": "youphotomobile (profile mode)",
@@ -21,6 +22,13 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "youphotomobile (Chrome Web)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "deviceId": "chrome"
         }
     ]
 }

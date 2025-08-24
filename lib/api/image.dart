@@ -2,6 +2,7 @@ import 'package:youphotomobile/api/base.dart';
 import 'package:youphotomobile/api/client.dart';
 import 'package:youphotomobile/api/loader.dart';
 import 'package:youphotomobile/config.dart';
+import 'package:youphotomobile/services/photo_cache_service.dart';
 
 // {
 // "tag": "1girl",
@@ -44,6 +45,7 @@ class PhotoColor {
     cnt = json['cnt'];
   }
 }
+
 // "country": "France",
 // "administrativeArea1": "Île-de-France",
 // "administrativeArea2": "Département de Paris",
@@ -118,6 +120,22 @@ class Photo {
 
   get rawUrl {
     return "${ApplicationConfig().serviceUrl}/image/$id/raw?a=${ApplicationConfig().token ?? ""}";
+  }
+
+  Future<void> cache(int albumId) async {
+    await PhotoCacheService().cachePhoto(this, albumId);
+  }
+
+  static Future<Photo?> getCached(int photoId, int albumId) async {
+    return await PhotoCacheService().getCachedPhoto(photoId, albumId);
+  }
+
+  static Future<void> clearCache() async {
+    await PhotoCacheService().clearCache();
+  }
+
+  static Future<void> clearAlbumCache(int albumId) async {
+    await PhotoCacheService().clearAlbumCache(albumId);
   }
 }
 

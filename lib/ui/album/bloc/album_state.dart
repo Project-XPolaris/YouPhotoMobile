@@ -6,7 +6,10 @@ class ImageQueryFilter {
   final List<String> libraryIds;
   final List<String> tag;
   const ImageQueryFilter(
-      {this.order = "id desc", this.random = false, this.libraryIds = const [], this.tag = const []});
+      {this.order = "id desc",
+      this.random = false,
+      this.libraryIds = const [],
+      this.tag = const []});
 
   ImageQueryFilter copyWith({
     String? order,
@@ -28,8 +31,10 @@ class DownloadAllImageProgress {
   final int total;
   final int current;
   final String? name;
-  DownloadAllImageProgress({required this.total, required this.current, this.name});
+  DownloadAllImageProgress(
+      {required this.total, required this.current, this.name});
 }
+
 class AlbumState extends Equatable {
   final ImageQueryFilter filter;
   final List<Photo> photos;
@@ -37,11 +42,26 @@ class AlbumState extends Equatable {
   final List<int> selectedPhotoIds;
   final bool selectMode;
   final DownloadAllImageProgress? downloadProgress;
+  final bool isOffline;
 
   const AlbumState(
-      {required this.filter, required this.photos, required this.viewMode, this.selectedPhotoIds = const [],this.selectMode = false,this.downloadProgress});
+      {required this.filter,
+      required this.photos,
+      required this.viewMode,
+      this.selectedPhotoIds = const [],
+      this.selectMode = false,
+      this.downloadProgress,
+      this.isOffline = false});
 
-  AlbumState copyWith({ImageQueryFilter? filter, List<Photo>? photos, String? viewMode, List<int>? selectedPhotoIds, bool? selectMode,DownloadAllImageProgress? downloadProgress,bool? isDownloadingAll}) {
+  AlbumState copyWith(
+      {ImageQueryFilter? filter,
+      List<Photo>? photos,
+      String? viewMode,
+      List<int>? selectedPhotoIds,
+      bool? selectMode,
+      DownloadAllImageProgress? downloadProgress,
+      bool? isDownloadingAll,
+      bool? isOffline}) {
     return AlbumState(
       filter: filter ?? this.filter,
       photos: photos ?? this.photos,
@@ -49,15 +69,27 @@ class AlbumState extends Equatable {
       selectedPhotoIds: selectedPhotoIds ?? this.selectedPhotoIds,
       selectMode: selectMode ?? this.selectMode,
       downloadProgress: downloadProgress ?? this.downloadProgress,
+      isOffline: isOffline ?? this.isOffline,
     );
   }
+
   bool isSelected(int photoId) {
     return selectedPhotoIds.contains(photoId);
   }
+
   @override
-  List<Object?> get props => [filter, photos,viewMode,selectedPhotoIds,selectMode,downloadProgress];
+  List<Object?> get props => [
+        filter,
+        photos,
+        viewMode,
+        selectedPhotoIds,
+        selectMode,
+        downloadProgress,
+        isOffline
+      ];
 }
 
 class AlbumInitial extends AlbumState {
-  AlbumInitial() : super(filter: const ImageQueryFilter(), photos: [],viewMode: "large");
+  AlbumInitial()
+      : super(filter: const ImageQueryFilter(), photos: [], viewMode: "large");
 }

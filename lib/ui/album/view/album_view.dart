@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youphotomobile/ui/components/LocalAlbumSelectView.dart';
+import 'package:youphotomobile/ui/components/OfflinePhotoView.dart';
 
 import '../../../api/album.dart';
 import '../../../util/listview.dart';
@@ -17,8 +18,8 @@ class AlbumDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return BlocProvider(
-        create: (_) =>
-            AlbumBloc(albumId: album.id)..add(const LoadDataEvent(force: false)),
+        create: (_) => AlbumBloc(albumId: album.id)
+          ..add(const LoadDataEvent(force: false)),
         child: BlocBuilder<AlbumBloc, AlbumState>(
           builder: (context, state) {
             var controller = createLoadMoreController(
@@ -26,15 +27,38 @@ class AlbumDetailView extends StatelessWidget {
             onRemoveSelectImages() {
               context.read<AlbumBloc>().add(const RemoveSelectImagesEvent());
             }
+
             void onDownloadAllAlbum(String? albumName) {
               context
                   .read<AlbumBloc>()
                   .add(DownloadAllAlbumEvent(localAlbumName: albumName));
             }
+
             return Scaffold(
               key: scaffoldKey,
               appBar: AppBar(
-                title: Text(album.displayName),
+                title: Row(
+                  children: [
+                    Text(album.displayName),
+                    if (state.isOffline)
+                      Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text(
+                          'Offline',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
@@ -102,7 +126,6 @@ class AlbumDetailView extends StatelessWidget {
                       .add(UpdateFilterEvent(filter: state.filter));
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(left: 16, right: 16),
                   child: Stack(
                     children: [
                       LayoutBuilder(builder:
@@ -137,10 +160,10 @@ class AlbumDetailView extends StatelessWidget {
                             mainAxisSpacing: 4.0,
                           ),
                           itemBuilder: (context, index) {
-                            var content = CachedNetworkImage(
+                            var content = OfflineAwareImage(
                               imageUrl: state.photos[index].thumbnailUrl,
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                              photoId: state.photos[index].id!,
+                              isOffline: state.isOffline,
                               fit: BoxFit.cover,
                             );
                             return GestureDetector(
@@ -154,9 +177,8 @@ class AlbumDetailView extends StatelessWidget {
                                   return;
                                 }
                                 await ImageViewer.Launch(
-                                    context,
-                                    context.read<AlbumBloc>().loader,
-                                    index, (changedIndex) {
+                                    context, state.photos, index,
+                                    (changedIndex) {
                                   double mainAxisSize = constraints.maxWidth;
                                   double crossAxisSize = constraints.maxHeight;
                                   int itemHeight =
@@ -177,7 +199,8 @@ class AlbumDetailView extends StatelessWidget {
                                   return;
                                 }
                                 context.read<AlbumBloc>().add(
-                                    const OnChangeSelectModeEvent(selectMode: true));
+                                    const OnChangeSelectModeEvent(
+                                        selectMode: true));
                                 context.read<AlbumBloc>().add(
                                     OnSelectPhotoEvent(
                                         photoId: state.photos[index].id!,
@@ -251,8 +274,8 @@ class AlbumDetailView extends StatelessWidget {
                                                                     context)
                                                                 .pop();
                                                           },
-                                                          child:
-                                                              const Text("Cancel")),
+                                                          child: const Text(
+                                                              "Cancel")),
                                                       TextButton(
                                                           onPressed: () {
                                                             Navigator.of(
@@ -260,7 +283,8 @@ class AlbumDetailView extends StatelessWidget {
                                                                 .pop();
                                                             onRemoveSelectImages();
                                                           },
-                                                          child: const Text("Delete"))
+                                                          child: const Text(
+                                                              "Delete"))
                                                     ],
                                                   );
                                                 });

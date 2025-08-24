@@ -54,7 +54,8 @@ class TabHomeVerticalPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     var content = CachedNetworkImage(
                       imageUrl: state.photos[index].thumbnailUrl,
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                       fit: imageFit,
                     );
                     return GestureDetector(
@@ -66,8 +67,7 @@ class TabHomeVerticalPage extends StatelessWidget {
                                   !state.isSelected(state.photos[index].id!)));
                           return;
                         }
-                        await ImageViewer.Launch(
-                            context, context.read<TabHomeBloc>().loader, index,
+                        await ImageViewer.Launch(context, state.photos, index,
                             (changedIndex) {
                           double mainAxisSize = constraints.maxWidth;
                           double crossAxisSize = constraints.maxHeight;
@@ -92,9 +92,8 @@ class TabHomeVerticalPage extends StatelessWidget {
                         if (state.selectMode) {
                           return;
                         }
-                        context
-                            .read<TabHomeBloc>()
-                            .add(const OnChangeSelectModeEvent(selectMode: true));
+                        context.read<TabHomeBloc>().add(
+                            const OnChangeSelectModeEvent(selectMode: true));
                         context.read<TabHomeBloc>().add(OnSelectPhotoEvent(
                             photoId: state.photos[index].id!, selected: true));
                       },
